@@ -15,15 +15,11 @@ constructor(
 ){}
 
 
-
-
-
-
 async signup(req: Request, res: Response): Promise<void> {
   try {
-    const { firstName, lastName, email, password, confirmPassword, phone, preferences } = req.body;
+    const { firstName, lastName, email, password, confirmPassword, phone } = req.body;
 
-    const userDetails = { firstName, lastName, email, password, confirmPassword, phone, preferences };
+    const userDetails = { firstName, lastName, email, password, confirmPassword, phone };
 
     console.log("user details is ", userDetails);
 
@@ -31,14 +27,14 @@ async signup(req: Request, res: Response): Promise<void> {
     const response = await this._authService.signupUser(userDetails);
 
     console.log("user is ", response.user);
-    res.cookie("thinklet_refreshToken", response.refreshToken, {
+    res.cookie("eventgrid_refreshToken", response.refreshToken, {
         httpOnly: true,
         sameSite: "none", // allow cross-site
         secure: true, // only over HTTPS
         maxAge: parseInt(process.env.MAX_AGE || "604800000"),
       });
 
-      res.cookie("thinklet_accessToken", response.accessToken, {
+      res.cookie("eventgrid_accessToken", response.accessToken, {
         httpOnly: true,
         sameSite: "none",
         secure: true,
@@ -70,14 +66,14 @@ async login(req: Request, res: Response): Promise<void>  {
 
     const result = await this._authService.loginUser({ emailOrPhone, password });
 
-    res.cookie('thinklet_refreshToken', result.refreshToken, {
+    res.cookie('eventgrid_refreshToken', result.refreshToken, {
       httpOnly: true,
       sameSite: 'none',
       secure: true,
       maxAge: parseInt(process.env.MAX_AGE || '604800000'),
     });
 
-    res.cookie('thinklet_accessToken', result.accessToken, {
+    res.cookie('eventgrid_accessToken', result.accessToken, {
       httpOnly: true,
       sameSite: 'none',
       secure: true,
@@ -98,13 +94,13 @@ async login(req: Request, res: Response): Promise<void>  {
 async logout(req: Request, res: Response): Promise<void> {
     try {
       console.log("log out ............ ctrl....");
-      res.clearCookie("thinklet_refreshToken", {
+      res.clearCookie("eventgrid_refreshToken", {
         httpOnly: true,
         sameSite: "none",
         secure: true,
       });
 
-      res.clearCookie("thinklet_accessToken", {
+      res.clearCookie("eventgrid_accessToken", {
         httpOnly: true,
         sameSite: "none",
         secure: true,
@@ -125,16 +121,16 @@ async logout(req: Request, res: Response): Promise<void> {
 
  async accessToken(req: Request, res: Response): Promise<void>  {
     try {
-      const { thinklet_refreshToken } = req.cookies;
+      const { eventgrid_refreshToken } = req.cookies;
 
-      if (!thinklet_refreshToken) {
+      if (!eventgrid_refreshToken) {
         res
           .status(HttpStatusCode.UNAUTHORIZED)
           .json({ msg: "refresh token not found" });
         return;
       }
 
-      const result = await this._authService.getAccessToken(thinklet_refreshToken);
+      const result = await this._authService.getAccessToken(eventgrid_refreshToken);
 
       console.log("result from ctrl is ...", result);
 
@@ -149,7 +145,7 @@ async logout(req: Request, res: Response): Promise<void> {
 
       console.log("result from ctrl is afrt destructr...", accessToken);
 
-      res.cookie("thinklet_accessToken", accessToken, {
+      res.cookie("eventgrid_accessToken", accessToken, {
         httpOnly: true,
         sameSite: "none",
         secure: true,

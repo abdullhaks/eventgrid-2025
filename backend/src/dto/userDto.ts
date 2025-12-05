@@ -6,7 +6,6 @@ export interface userSignupRequestDto {
   password: string;
   confirmPassword: string;
   profile?:string;
-  preferences: string[]
 };
 
 

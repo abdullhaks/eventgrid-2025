@@ -17,12 +17,10 @@ constructor(
 ){};
 
 
-
-
 async signupUser(userData: userSignupRequestDto): Promise<any> {
   console.log("user data from service....", userData);
 
-  if (!userData.email || !userData.password || !userData.confirmPassword || !userData.firstName || !userData.lastName || !userData.phone || !userData.preferences.length) {
+  if (!userData.email || !userData.password || !userData.confirmPassword || !userData.firstName || !userData.lastName || !userData.phone ) {
     throw {
       status: HttpStatusCode.BAD_REQUEST,
       message: "Please provide all required fields",
@@ -67,13 +65,6 @@ async signupUser(userData: userSignupRequestDto): Promise<any> {
       role: "user",
     });
 
-let preferences = await Promise.all(
-    rest.preferences.map(async (prefId) => {
-      
-      let prefData = await this._categoryRepository.findOne({ _id: prefId });
-      return { _id: prefData?._id, name: prefData?.name };
-    })
-  );
 
   let newUser = {
     _id: rest._id,
@@ -82,7 +73,6 @@ let preferences = await Promise.all(
     phone: rest.phone,
     email: rest.email,
     profile: rest.profile || "",
-    preferences: preferences,
   }
 
   
@@ -141,12 +131,7 @@ async loginUser(userData: userLoginRequestDto): Promise<any> {
 
   const { password, ...rest } = existingUser.toJSON();
 
-  let preferences = await Promise.all(
-    rest.preferences.map(async (prefId:string) => {
-      let prefData = await this._categoryRepository.findOne({ _id: prefId });
-      return { _id: prefData?._id, name: prefData?.name };
-    })
-  );
+
 
   let newUser = {
     _id: rest._id,
@@ -154,8 +139,7 @@ async loginUser(userData: userLoginRequestDto): Promise<any> {
     lastName: rest.lastName,
     phone: rest.phone,
     email: rest.email,
-    profile: rest.profile || "",
-    preferences: preferences,
+    profile: rest.profile || ""
   }
 
   return {

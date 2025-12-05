@@ -10,7 +10,6 @@ export interface IUser {
   phone?: string;
   email: string;
   profile?: string;
-  preferences: IPreference[]; 
 };
 
 
