@@ -71,7 +71,7 @@ export const Login = ({ onNavigate }:any) => {
     validateField(name, value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
     setIsLoading(true);
     const isEmailOrPhoneValid = validateField(
