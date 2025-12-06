@@ -1,26 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, 
-  MapPin, 
-  Star, 
-  Filter, 
-  Music, 
-  Camera, 
-  Utensils, 
-  Home as HOMEICON, 
-  Heart,
-  ChevronDown,
-  Calendar,
-  User,
-  LogOut,
-  Sparkles,
-  Zap,
-  Coffee,
-  Aperture
-} from 'lucide-react';
+import { Search, MapPin, Star, Filter, Music, Camera, Utensils, Home as HOMEICON, Heart,ChevronDown,
+  Calendar,User,LogOut,Sparkles,Zap,Coffee,Aperture,
+  Check} from 'lucide-react';
+import eg_logo_1 from '/eg-logo1.png';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser as logout } from "../services/apis/userApi";
+import { logoutUser } from "../redux/slices/userSlice";
+import type { IUser } from '../interfaces/user';
+import { useNavigate } from 'react-router-dom';
+import ConfirmModal from '../components/ConfirmModal';
+
+
 
 // --- MOCK DATA ---
+interface RootState {
+  user: {
+    user: IUser;
+  };
+}
 
 const CATEGORIES = [
   { id: 'all', label: 'All', icon: Sparkles, color: 'bg-stone-900', text: 'text-white' },
@@ -121,58 +119,161 @@ const SERVICES = [
 // --- COMPONENTS ---
 
 export const Navbar = () => {
-  return (
+  const user = useSelector((state: RootState) => state.user.user);
+  // --- State Management ---
+  const [showFilter, setShowFilter] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [searchCategory, setSearchCategory] = useState("All");
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [showConfirm, setShowConfirm] = useState(false);
+
+
+  // --- Refs for Click Outside Detection ---
+  const filterRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+   const handleLogout = () => {
+    dispatch(logoutUser());
+    logout();
+    navigate("/");
+  };
+
+  // --- Close dropdowns when clicking outside ---
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
+        setShowFilter(false);
+      }
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setShowProfile(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const filterOptions = ["All", "Venue", "DJ", "Catering", "Photography", "Decor"];
+
+  return (<>
     <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-stone-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-stone-900 rounded-lg grid grid-cols-2 gap-1 p-1">
-              <div className="bg-white rounded-sm"></div>
-              <div className="bg-orange-500 rounded-sm"></div>
-              <div className="bg-white rounded-sm"></div>
-              <div className="bg-white rounded-sm"></div>
-            </div>
-            <span className="text-xl font-bold tracking-tight font-display hidden sm:block">EVENTGRID</span>
+          
+          {/* --- Logo --- */}
+          <div className="flex items-center cursor-pointer">
+            <img src={eg_logo_1} className="h-18" alt="EVENTGRID" />
           </div>
 
-          {/* Search Bar */}
+          {/* --- Search Bar (Desktop) --- */}
           <div className="hidden md:flex flex-1 max-w-lg mx-8 relative group">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <Search className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
             </div>
+            
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-2.5 border-none rounded-full bg-stone-100 text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:bg-white transition-all shadow-inner"
-              placeholder="Search for venues, artists, or services..."
+              className="block w-full pl-10 pr-12 py-2.5 border-none rounded-full bg-stone-100 text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:bg-white transition-all shadow-inner"
+              placeholder={`Search for ${searchCategory.toLowerCase()}...`}
             />
-            <div className="absolute inset-y-0 right-2 flex items-center">
-              <button className="p-1.5 rounded-full bg-white shadow-sm hover:shadow-md transition-shadow">
-                <Filter size={14} className="text-stone-600" />
+
+            {/* Filter Toggle Button */}
+            <div className="absolute inset-y-0 right-2 flex items-center" ref={filterRef}>
+              <button 
+                onClick={() => setShowFilter(!showFilter)}
+                className={`p-1.5 rounded-full shadow-sm hover:shadow-md transition-all ${showFilter ? 'bg-orange-100 text-orange-600' : 'bg-white text-stone-600'}`}
+              >
+                <Filter size={14} />
               </button>
+
+              {/* 1. FILTER DROPDOWN MENU */}
+              {showFilter && (
+                <div className="absolute top-full right-0 mt-3 w-48 bg-white rounded-xl shadow-xl border border-stone-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="px-3 py-2 text-xs font-semibold text-stone-400 uppercase tracking-wider">
+                    Filter By
+                  </div>
+                  {filterOptions.map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => {
+                        setSearchCategory(option);
+                        setShowFilter(false);
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-orange-600 flex items-center justify-between transition-colors"
+                    >
+                      <span>{option}</span>
+                      {searchCategory === option && <Check size={14} className="text-orange-500" />}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
-          {/* User Profile */}
+          {/* --- User Profile Section --- */}
           <div className="flex items-center gap-4">
+            
+            {/* Likes Button */}
             <button className="p-2 text-stone-500 hover:text-stone-900 hover:bg-stone-100 rounded-full transition-all relative">
               <Heart size={20} />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-orange-500 rounded-full border-2 border-white"></span>
             </button>
-            <div className="flex items-center gap-3 pl-4 border-l border-stone-200">
+
+            <div className="flex items-center gap-3 pl-4 border-l border-stone-200" ref={profileRef}>
               <div className="text-right hidden lg:block">
-                <p className="text-sm font-bold text-stone-900 leading-none">Alex Morgan</p>
+                <p className="text-sm font-bold text-stone-900 leading-none">{user?.firstName || "Guest"}</p>
                 <p className="text-xs text-stone-500">Event Planner</p>
               </div>
-              <div className="w-10 h-10 rounded-full bg-stone-200 overflow-hidden border-2 border-white shadow-md cursor-pointer hover:scale-105 transition-transform">
-                <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
+
+              {/* 2. PROFILE TOGGLE / AVATAR */}
+              <div className="relative z-10">
+                <div 
+                  onClick={() => setShowProfile(!showProfile)}
+                  className="w-10 h-10 rounded-full bg-stone-200 overflow-hidden border-2 border-white shadow-md cursor-pointer hover:scale-105 transition-transform active:scale-95"
+                >
+                  <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
+                </div>
+
+                {/* PROFILE DROPDOWN MENU */}
+                {showProfile && (
+                  <div className="absolute top-full right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-stone-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
+                    
+                    {/* Mobile Only: Show Name in dropdown since it's hidden in navbar */}
+                    <div className="lg:hidden px-4 py-3 border-b border-stone-100 bg-stone-50">
+                      <p className="text-sm font-bold text-stone-900">{user?.firstName || "Guest"}</p>
+                      <p className="text-xs text-stone-500">Event Planner</p>
+                    </div>
+
+                    <div className="py-1">
+                      <button className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-orange-600 flex items-center gap-3 transition-colors">
+                        <User size={16} className="text-stone-400" />
+                        Profile
+                      </button>
+                      <button className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-orange-600 flex items-center gap-3 transition-colors">
+                        <Calendar size={16} className="text-stone-400" />
+                        My Events
+                      </button>
+                    </div>
+                    
+                    <div className="border-t border-stone-100 py-1">
+                      <button onClick={()=> setShowConfirm(true)} className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors">
+                        <LogOut size={16} />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
+
             </div>
           </div>
         </div>
       </div>
-      
-      {/* Mobile Search - Visible only on small screens */}
+
+      {/* --- Mobile Search --- */}
       <div className="md:hidden px-4 pb-4">
         <div className="relative">
           <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
@@ -181,9 +282,55 @@ export const Navbar = () => {
             className="w-full pl-10 pr-4 py-2 bg-stone-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/50"
             placeholder="Search..."
           />
+
+            {/* Filter Toggle Button */}
+            <div className="absolute inset-y-0 right-2 flex items-center z0" ref={filterRef}>
+              <button 
+                onClick={() => setShowFilter(!showFilter)}
+                className={`p-1.5 rounded-full shadow-sm hover:shadow-md transition-all ${showFilter ? 'bg-orange-100 text-orange-600' : 'bg-white text-stone-600'}`}
+              >
+                <Filter size={14} />
+              </button>
+
+              {/* 1. FILTER DROPDOWN MENU */}
+              {showFilter && (
+                <div className="absolute top-full right-0 mt-3 w-48 bg-white rounded-xl shadow-xl border border-stone-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200">
+                  <div className="px-3 py-2 text-xs font-semibold text-stone-400 uppercase tracking-wider">
+                    Filter By
+                  </div>
+                  {filterOptions.map((option) => (
+                    <button
+                      key={option}
+                      onClick={() => {
+                        setSearchCategory(option);
+                        setShowFilter(false);
+                      }}
+                      className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-orange-600 flex items-center justify-between transition-colors"
+                    >
+                      <span>{option}</span>
+                      {searchCategory === option && <Check size={14} className="text-orange-500" />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
         </div>
       </div>
     </nav>
+
+
+                {/* Confirm Modal */}
+      {showConfirm && (
+        <ConfirmModal
+          message="Are you sure you want to log out?"
+          onConfirm={handleLogout}
+          onCancel={() => setShowConfirm(false)}
+        />
+      )}
+
+
+
+    </>
   );
 };
 

@@ -86,69 +86,74 @@ async signupUser(userData: userSignupRequestDto): Promise<any> {
 };
 
 
-async loginUser(userData: userLoginRequestDto): Promise<any> {
-  console.log('user data from service....', userData);
+  async loginUser(userData: userLoginRequestDto): Promise<any> {
+    console.log("user data from service....", userData);
 
-  if (!userData.emailOrPhone || !userData.password) {
-    throw {
-      status: HttpStatusCode.BAD_REQUEST,
-      message: 'Please provide all required fields',
-      code: 'MISSING_FIELDS',
-    };
-  }
-
-  let existingUser = await this._userRepository.findOne({ email: userData.emailOrPhone });
-  if (!existingUser) {
-    
-    existingUser = await this._userRepository.findOne({ phone: userData.emailOrPhone });
-    if (!existingUser) {
+    if (!userData.emailOrPhone || !userData.password) {
       throw {
         status: HttpStatusCode.BAD_REQUEST,
-        message: 'Invalid credentials',
-        code: 'INVALID_CREDENTIALS',
+        message: "Please provide all required fields",
+        code: "MISSING_FIELDS",
       };
     }
-  }
 
-  const isPasswordValid = await bcrypt.compare(userData.password, existingUser.password);
-  if (!isPasswordValid) {
-    throw {
-      status: HttpStatusCode.BAD_REQUEST,
-      message: 'Invalid credentials',
-      code: 'INVALID_CREDENTIALS',
+    let existingUser = await this._userRepository.findOne({
+      email: userData.emailOrPhone,
+    });
+    if (!existingUser) {
+      existingUser = await this._userRepository.findOne({
+        phone: userData.emailOrPhone,
+      });
+      if (!existingUser) {
+        throw {
+          status: HttpStatusCode.BAD_REQUEST,
+          message: "Invalid credentials",
+          code: "INVALID_CREDENTIALS",
+        };
+      }
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      userData.password,
+      existingUser.password
+    );
+    if (!isPasswordValid) {
+      throw {
+        status: HttpStatusCode.BAD_REQUEST,
+        message: "Invalid credentials",
+        code: "INVALID_CREDENTIALS",
+      };
+    }
+
+    const accessToken = generateAccessToken({
+      id: existingUser._id.toString(),
+      role: "user",
+    });
+    const refreshToken = generateRefreshToken({
+      id: existingUser._id.toString(),
+      role: "user",
+    });
+
+    const { password, ...rest } = existingUser.toJSON();
+
+
+
+    let newUser = {
+      _id: rest._id,
+      firstName: rest.firstName,
+      lastName: rest.lastName,
+      phone: rest.phone,
+      email: rest.email,
+      profile: rest.profile || ""
+    };
+
+    return {
+      message: "Login successful",
+      user: newUser,
+      accessToken,
+      refreshToken,
     };
   }
-
-  const accessToken = generateAccessToken({
-    id: existingUser._id.toString(),
-    role: 'user',
-  });
-  const refreshToken = generateRefreshToken({
-    id: existingUser._id.toString(),
-    role: 'user',
-  });
-
-
-  const { password, ...rest } = existingUser.toJSON();
-
-
-
-  let newUser = {
-    _id: rest._id,
-    firstName: rest.firstName,
-    lastName: rest.lastName,
-    phone: rest.phone,
-    email: rest.email,
-    profile: rest.profile || ""
-  }
-
-  return {
-    message: 'Login successful',
-    user: newUser,
-    accessToken,
-    refreshToken,
-  };
-};
 
 
 async getAccessToken(refreshToken: string): Promise<any> {

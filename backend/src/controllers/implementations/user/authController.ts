@@ -51,44 +51,52 @@ async signup(req: Request, res: Response): Promise<void> {
   }
 };
 
+  async login(req: Request, res: Response): Promise<void> {
+    try {
+      const { emailOrPhone, password } = req.body;
 
-async login(req: Request, res: Response): Promise<void>  {
-  try {
-    const { emailOrPhone, password } = req.body;
+      if (!emailOrPhone || !password) {
+        res.status(HttpStatusCode.BAD_REQUEST).json({
+          message: "Please provide all required fields",
+          code: "MISSING_FIELDS",
+        });
+        return;
+      }
 
-    if (!emailOrPhone || !password) {
-      res.status(HttpStatusCode.BAD_REQUEST).json({
-        message: 'Please provide all required fields',
-        code: 'MISSING_FIELDS',
+      const result = await this._authService.loginUser({
+        emailOrPhone,
+        password,
       });
-      return;
+
+      res.cookie("eventgrid_refreshToken", result.refreshToken, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: parseInt(process.env.MAX_AGE || "604800000"),
+        partitioned: true,
+      
+        
+      });
+
+      res.cookie("eventgrid_accessToken", result.accessToken, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: true,
+        maxAge: parseInt(process.env.MAX_AGE || "604800000"),
+        partitioned: true,
+      });
+
+      res
+        .status(HttpStatusCode.OK)
+        .json({ message: result.message, user: result.user });
+    } catch (error: any) {
+      console.error("Error in login:", error);
+      res.status(error.status || HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+        message: error.message || MESSAGES.server.serverError,
+        code: error.code || "SERVER_ERROR",
+      });
     }
-
-    const result = await this._authService.loginUser({ emailOrPhone, password });
-
-    res.cookie('eventgrid_refreshToken', result.refreshToken, {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-      maxAge: parseInt(process.env.MAX_AGE || '604800000'),
-    });
-
-    res.cookie('eventgrid_accessToken', result.accessToken, {
-      httpOnly: true,
-      sameSite: 'none',
-      secure: true,
-      maxAge: parseInt(process.env.MAX_AGE || '604800000'),
-    });
-
-    res.status(HttpStatusCode.OK).json({ message: result.message, user: result.user });
-  } catch (error: any) {
-    console.error('Error in login:', error);
-    res.status(error.status || HttpStatusCode.INTERNAL_SERVER_ERROR).json({
-      message: error.message || MESSAGES.server.serverError,
-      code: error.code || 'SERVER_ERROR',
-    });
   }
-};
 
 
 async logout(req: Request, res: Response): Promise<void> {

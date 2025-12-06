@@ -5,10 +5,8 @@ import { Signup } from "../pages/Signup";
 import { Home } from "../pages/Home";
 import UserPublicRoute from "../routes/publicRoutes";
 import UserPrivateRoute from "../routes/privateRoutes";
-import { ArticleList } from "../pages/MyArticles";
-import { Profile } from "../pages/Profile";
-import { CreateArticle } from "../pages/CreateArticle";
-import { ArticleView } from "../pages/ArticleVeiw";
+// import { Profile } from "../pages/Profile";
+
 import Auth from "../pages/Auth";
 
 const UserRoutes = () => {
@@ -22,13 +20,13 @@ const UserRoutes = () => {
       </Route>
       <Route element={<UserPrivateRoute />}>
         <Route path="/home" element={<Home />} />
-        <Route path="/articles" element={<ArticleList />} />
+        {/* <Route path="/articles" element={<ArticleList />} />
         <Route path="/settings" element={<Profile />} />
         <Route path="/create" element={<CreateArticle />} />
-        <Route path="/edit/:articleId" element={<CreateArticle editMode={true} />} />
+        <Route path="/edit/:articleId" element={<CreateArticle editMode={true} />} /> */}
         
       </Route>
-      <Route path="/article/:articleId" element={<ArticleView />} />
+      {/* <Route path="/article/:articleId" element={<ArticleView />} /> */}
 
       <Route path="*" element={<Navigate to="/" />} />
 
