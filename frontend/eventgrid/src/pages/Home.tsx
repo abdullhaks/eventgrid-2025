@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import{ useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, Star, Filter, Music, Camera, Utensils, Home as HOMEICON, Heart,ChevronDown,
-  Calendar,User,LogOut,Sparkles,Zap,Coffee,Aperture,
+import { Search, MapPin, Star, Filter, Music, Camera, Utensils, Home as HOMEICON, Heart,
+  Calendar,User,LogOut,Sparkles,Zap,
   Check} from 'lucide-react';
 import eg_logo_1 from '/eg-logo1.png';
 import { useDispatch, useSelector } from 'react-redux';
@@ -400,7 +400,7 @@ export const ServiceCard = ({ service, index }:any) => {
           alt={service.title} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-in-out"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent opacity-60"></div>
         
         <div className="absolute bottom-4 left-4 right-4 text-white">
           <h3 className="text-xl font-bold font-display leading-tight mb-1">{service.title}</h3>
@@ -412,7 +412,7 @@ export const ServiceCard = ({ service, index }:any) => {
       </div>
 
       {/* Content */}
-      <div className="p-5 flex flex-col flex-grow">
+      <div className="p-5 flex flex-col grow">
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-1">
             <Star className="fill-yellow-400 text-yellow-400" size={16} />
@@ -453,7 +453,7 @@ export const HeroSection = () => {
     <div className="relative pt-12 pb-8 px-4 sm:px-8 max-w-7xl mx-auto">
       <div className="bg-stone-900 rounded-[2.5rem] p-8 sm:p-12 lg:p-16 text-white relative overflow-hidden">
         {/* Abstract Shapes */}
-        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-gradient-to-br from-orange-500 to-pink-500 rounded-full blur-[80px] opacity-20 translate-x-1/3 -translate-y-1/3"></div>
+        <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-linear-to-br from-orange-500 to-pink-500 rounded-full blur-[80px] opacity-20 translate-x-1/3 -translate-y-1/3"></div>
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500 rounded-full blur-[60px] opacity-20 -translate-x-1/3 translate-y-1/3"></div>
 
         <div className="relative z-10 max-w-2xl">
@@ -467,7 +467,7 @@ export const HeroSection = () => {
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display tracking-tight leading-[1.1] mb-6">
               Your Event. <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-pink-400">Our Grid.</span>
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-400 to-pink-400">Our Grid.</span>
             </h1>
             <p className="text-lg text-stone-300 max-w-lg mb-8 leading-relaxed">
               Discover and book the finest vendors for your next big moment. From intimate gatherings to grand galas.

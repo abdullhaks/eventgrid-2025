@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 // Landing Page
 import { useState, useEffect } from 'react';
-import { useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { 
   Music, 
   Camera, 
@@ -152,7 +152,7 @@ const Hero = () => {
           x: [0, 100, 0]
         }}
         transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-        className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-orange-200 to-pink-200 rounded-full blur-[100px] -z-10 opacity-60"
+        className="absolute top-0 right-0 w-[500px] h-[500px] bg-linear-to-br from-orange-200 to-pink-200 rounded-full blur-[100px] -z-10 opacity-60"
       />
       <motion.div 
         animate={{ 
@@ -160,7 +160,7 @@ const Hero = () => {
           x: [0, -50, 0]
         }}
         transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-        className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-blue-100 to-purple-100 rounded-full blur-[100px] -z-10 opacity-60"
+        className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-linear-to-tr from-blue-100 to-purple-100 rounded-full blur-[100px] -z-10 opacity-60"
       />
 
       <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-12 gap-12 items-center">
@@ -175,7 +175,7 @@ const Hero = () => {
             </span>
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold text-black tracking-tighter leading-[0.9] font-display">
               Your Event.<br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-pink-500 to-purple-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-500 via-pink-500 to-purple-600">
                 Our Grid.
               </span><br />
               Infinite Possibilities.
@@ -210,12 +210,12 @@ const Hero = () => {
 
         <div className="lg:col-span-5 relative  lg:block">
            {/* Abstract Composition */}
-           <div className="relative w-full aspect-[4/5]">
+           <div className="relative w-full aspect-4/5">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4, duration: 0.8 }}
-                className="absolute top-0 right-0 w-3/4 h-3/4 bg-stone-900 rounded-[2rem] overflow-hidden"
+                className="absolute top-0 right-0 w-3/4 h-3/4 bg-stone-900 rounded-4xl overflow-hidden"
               >
                 <img src={eg_img_1} alt="EVENTGRID" className="w-full h-full object-cover opacity-80" />
               </motion.div>
@@ -224,7 +224,7 @@ const Hero = () => {
                 initial={{ opacity: 0, scale: 0.8, x: -50 }}
                 animate={{ opacity: 1, scale: 1, x: 0 }}
                 transition={{ delay: 0.6, duration: 0.8 }}
-                className="absolute bottom-0 left-0 w-2/3 h-2/3 bg-orange-500 rounded-[2rem] flex items-center justify-center p-8 text-white shadow-2xl"
+                className="absolute bottom-0 left-0 w-2/3 h-2/3 bg-orange-500 rounded-4xl flex items-center justify-center p-8 text-white shadow-2xl"
               >
                  <div className="space-y-2">
                     <p className="text-5xl font-bold font-display">25k+</p>
@@ -270,7 +270,7 @@ const BentoGrid = () => {
             viewport={{ once: true }}
             transition={{ delay: index * 0.1 }}
             whileHover={{ y: -5 }}
-            className={`group relative rounded-[2rem] overflow-hidden ${cat.color} ${cat.textColor} p-8 flex flex-col justify-between shadow-xl cursor-pointer`}
+            className={`group relative rounded-4xl overflow-hidden ${cat.color} ${cat.textColor} p-8 flex flex-col justify-between shadow-xl cursor-pointer`}
           >
             {/* Background Image on Hover */}
             <motion.div 
@@ -302,7 +302,7 @@ const BentoGrid = () => {
 
 const Features = () => {
   return (
-    <section className="py-24 bg-stone-50 rounded-t-[3rem] mt-[-2rem] relative z-20">
+    <section className="py-24 bg-stone-50 rounded-t-[3rem] -mt-8 relative z-20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
@@ -332,11 +332,11 @@ const Features = () => {
           </div>
 
           <div className="relative">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-gradient-to-r from-purple-200 to-orange-200 rounded-full blur-3xl opacity-30 animate-pulse"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-linear-to-r from-purple-200 to-orange-200 rounded-full blur-3xl opacity-30 animate-pulse"></div>
             <div className="grid grid-cols-2 gap-4">
               <motion.div 
                 whileHover={{ scale: 1.02 }}
-                className="bg-white p-6 rounded-[2rem] shadow-lg flex flex-col gap-4"
+                className="bg-white p-6 rounded-4xl shadow-lg flex flex-col gap-4"
               >
                 <div className="h-32 bg-purple-100 rounded-2xl w-full flex items-center justify-center text-purple-600">
                    <Music size={40} />
@@ -348,7 +348,7 @@ const Features = () => {
               </motion.div>
               <motion.div 
                 whileHover={{ scale: 1.02 }}
-                className="bg-stone-900 text-white p-6 rounded-[2rem] shadow-lg flex flex-col gap-4 mt-8"
+                className="bg-stone-900 text-white p-6 rounded-4xl shadow-lg flex flex-col gap-4 mt-8"
               >
                 <div className="h-32 bg-stone-800 rounded-2xl w-full flex items-center justify-center text-orange-500">
                    <Calendar size={40} />
