@@ -8,6 +8,7 @@ import UserPrivateRoute from "../routes/privateRoutes";
 // import { Profile } from "../pages/Profile";
 
 import Auth from "../pages/Auth";
+import { SearchConsole } from "../pages/SearchConsole";
 
 const UserRoutes = () => {
   return (
@@ -20,8 +21,8 @@ const UserRoutes = () => {
       </Route>
       <Route element={<UserPrivateRoute />}>
         <Route path="/home" element={<Home />} />
-        {/* <Route path="/articles" element={<ArticleList />} />
-        <Route path="/settings" element={<Profile />} />
+        <Route path="/search" element={<SearchConsole />} />
+        {/* <Route path="/settings" element={<Profile />} />
         <Route path="/create" element={<CreateArticle />} />
         <Route path="/edit/:articleId" element={<CreateArticle editMode={true} />} /> */}
         
@@ -29,6 +30,7 @@ const UserRoutes = () => {
       {/* <Route path="/article/:articleId" element={<ArticleView />} /> */}
 
       <Route path="*" element={<Navigate to="/" />} />
+      
 
     </Routes>
   );

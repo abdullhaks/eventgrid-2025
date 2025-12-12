@@ -2,30 +2,35 @@ import{ useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, MapPin, Star, Filter, Music, Camera, Utensils, Home as HOMEICON, Heart,
   Calendar,User,LogOut,Sparkles,Zap,
-  Check} from 'lucide-react';
-import eg_logo_1 from '/eg-logo1.png';
+  Check,
+  ArrowRight,
+  ChevronRight,
+  Play} from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser as logout } from "../services/apis/userApi";
 import { logoutUser } from "../redux/slices/userSlice";
 import type { IUser } from '../interfaces/user';
 import { useNavigate } from 'react-router-dom';
 import ConfirmModal from '../components/ConfirmModal';
+import { Footer } from './LandingPage';
+import { Navbar } from '../components/Navbar';
+import { CategoryFilter } from '../components/CategoryFilter';
 
 
 
-// --- MOCK DATA ---
-interface RootState {
-  user: {
-    user: IUser;
-  };
-}
+
 
 const CATEGORIES = [
   { id: 'all', label: 'All', icon: Sparkles, color: 'bg-stone-900', text: 'text-white' },
   { id: 'venue', label: 'Venues', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-  { id: 'dj', label: 'Music & DJs', icon: Music, color: 'bg-purple-600', text: 'text-white' },
-  { id: 'catering', label: 'Catering', icon: Utensils, color: 'bg-emerald-600', text: 'text-white' },
-  { id: 'photo', label: 'Photography', icon: Camera, color: 'bg-blue-600', text: 'text-white' },
+  { id: 'wedding_planners', label: 'Wedding Planners', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+  { id: 'destination_wedding', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+  { id: 'corporate_event', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+  { id: 'beach_wedding', label: 'Beach Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+  { id: 'music_and_entertainment', label: 'Music and Entertainment', icon: Music, color: 'bg-purple-600', text: 'text-white' },
+  { id: 'private_parties', label: 'Private Parties', icon: Music, color: 'bg-purple-600', text: 'text-white' },
+  { id: 'catering', label: 'Catering Service', icon: Utensils, color: 'bg-emerald-600', text: 'text-white' },
+  { id: 'photography&videography', label: 'Photography & Videography', icon: Camera, color: 'bg-blue-600', text: 'text-white' },
 ];
 
 const SERVICES = [
@@ -118,250 +123,11 @@ const SERVICES = [
 
 // --- COMPONENTS ---
 
-export const Navbar = () => {
-  const user = useSelector((state: RootState) => state.user.user);
-  // --- State Management ---
-  const [showFilter, setShowFilter] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
-  const [searchCategory, setSearchCategory] = useState("All");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [showConfirm, setShowConfirm] = useState(false);
-
-
-  // --- Refs for Click Outside Detection ---
-  const filterRef = useRef<HTMLDivElement>(null);
-  const profileRef = useRef<HTMLDivElement>(null);
-
-   const handleLogout = () => {
-    dispatch(logoutUser());
-    logout();
-    navigate("/");
-  };
-
-  // --- Close dropdowns when clicking outside ---
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(event.target as Node)) {
-        setShowFilter(false);
-      }
-      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        setShowProfile(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const filterOptions = ["All", "Venue", "DJ", "Catering", "Photography", "Decor"];
-
-  return (<>
-    <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-stone-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          
-          {/* --- Logo --- */}
-          <div className="flex items-center cursor-pointer">
-            <img src={eg_logo_1} className="h-18" alt="EVENTGRID" />
-          </div>
-
-          {/* --- Search Bar (Desktop) --- */}
-          <div className="hidden md:flex flex-1 max-w-lg mx-8 relative group">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400 group-focus-within:text-orange-500 transition-colors" />
-            </div>
-            
-            <input
-              type="text"
-              className="block w-full pl-10 pr-12 py-2.5 border-none rounded-full bg-stone-100 text-stone-900 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:bg-white transition-all shadow-inner"
-              placeholder={`Search for ${searchCategory.toLowerCase()}...`}
-            />
-
-            {/* Filter Toggle Button */}
-            <div className="absolute inset-y-0 right-2 flex items-center" ref={filterRef}>
-              <button 
-                onClick={() => setShowFilter(!showFilter)}
-                className={`p-1.5 rounded-full shadow-sm hover:shadow-md transition-all ${showFilter ? 'bg-orange-100 text-orange-600' : 'bg-white text-stone-600'}`}
-              >
-                <Filter size={14} />
-              </button>
-
-              {/* 1. FILTER DROPDOWN MENU */}
-              {showFilter && (
-                <div className="absolute top-full right-0 mt-3 w-48 bg-white rounded-xl shadow-xl border border-stone-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200">
-                  <div className="px-3 py-2 text-xs font-semibold text-stone-400 uppercase tracking-wider">
-                    Filter By
-                  </div>
-                  {filterOptions.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => {
-                        setSearchCategory(option);
-                        setShowFilter(false);
-                      }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-orange-600 flex items-center justify-between transition-colors"
-                    >
-                      <span>{option}</span>
-                      {searchCategory === option && <Check size={14} className="text-orange-500" />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* --- User Profile Section --- */}
-          <div className="flex items-center gap-4">
-            
-            {/* Likes Button */}
-            <button className="p-2 text-stone-500 hover:text-stone-900 hover:bg-stone-100 rounded-full transition-all relative">
-              <Heart size={20} />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-orange-500 rounded-full border-2 border-white"></span>
-            </button>
-
-            <div className="flex items-center gap-3 pl-4 border-l border-stone-200" ref={profileRef}>
-              <div className="text-right hidden lg:block">
-                <p className="text-sm font-bold text-stone-900 leading-none">{user?.firstName || "Guest"}</p>
-                <p className="text-xs text-stone-500">Event Planner</p>
-              </div>
-
-              {/* 2. PROFILE TOGGLE / AVATAR */}
-              <div className="relative z-10">
-                <div 
-                  onClick={() => setShowProfile(!showProfile)}
-                  className="w-10 h-10 rounded-full bg-stone-200 overflow-hidden border-2 border-white shadow-md cursor-pointer hover:scale-105 transition-transform active:scale-95"
-                >
-                  <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User" />
-                </div>
-
-                {/* PROFILE DROPDOWN MENU */}
-                {showProfile && (
-                  <div className="absolute top-full right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-stone-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200 origin-top-right">
-                    
-                    {/* Mobile Only: Show Name in dropdown since it's hidden in navbar */}
-                    <div className="lg:hidden px-4 py-3 border-b border-stone-100 bg-stone-50">
-                      <p className="text-sm font-bold text-stone-900">{user?.firstName || "Guest"}</p>
-                      <p className="text-xs text-stone-500">Event Planner</p>
-                    </div>
-
-                    <div className="py-1">
-                      <button className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-orange-600 flex items-center gap-3 transition-colors">
-                        <User size={16} className="text-stone-400" />
-                        Profile
-                      </button>
-                      <button className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-orange-600 flex items-center gap-3 transition-colors">
-                        <Calendar size={16} className="text-stone-400" />
-                        My Events
-                      </button>
-                    </div>
-                    
-                    <div className="border-t border-stone-100 py-1">
-                      <button onClick={()=> setShowConfirm(true)} className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors">
-                        <LogOut size={16} />
-                        Logout
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* --- Mobile Search --- */}
-      <div className="md:hidden px-4 pb-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
-          <input
-            type="text"
-            className="w-full pl-10 pr-4 py-2 bg-stone-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500/50"
-            placeholder="Search..."
-          />
-
-            {/* Filter Toggle Button */}
-            <div className="absolute inset-y-0 right-2 flex items-center z0" ref={filterRef}>
-              <button 
-                onClick={() => setShowFilter(!showFilter)}
-                className={`p-1.5 rounded-full shadow-sm hover:shadow-md transition-all ${showFilter ? 'bg-orange-100 text-orange-600' : 'bg-white text-stone-600'}`}
-              >
-                <Filter size={14} />
-              </button>
-
-              {/* 1. FILTER DROPDOWN MENU */}
-              {showFilter && (
-                <div className="absolute top-full right-0 mt-3 w-48 bg-white rounded-xl shadow-xl border border-stone-100 overflow-hidden py-1 animate-in fade-in zoom-in-95 duration-200">
-                  <div className="px-3 py-2 text-xs font-semibold text-stone-400 uppercase tracking-wider">
-                    Filter By
-                  </div>
-                  {filterOptions.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => {
-                        setSearchCategory(option);
-                        setShowFilter(false);
-                      }}
-                      className="w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-orange-600 flex items-center justify-between transition-colors"
-                    >
-                      <span>{option}</span>
-                      {searchCategory === option && <Check size={14} className="text-orange-500" />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-        </div>
-      </div>
-    </nav>
-
-
-                {/* Confirm Modal */}
-      {showConfirm && (
-        <ConfirmModal
-          message="Are you sure you want to log out?"
-          onConfirm={handleLogout}
-          onCancel={() => setShowConfirm(false)}
-        />
-      )}
 
 
 
-    </>
-  );
-};
 
-export const CategoryFilter = ({ activeCategory, setActiveCategory }:any) => {
-  return (
-    <div className="py-8 overflow-x-auto no-scrollbar">
-      <div className="flex gap-3 px-4 sm:px-8 min-w-max">
-        {CATEGORIES.map((cat) => {
-          const isActive = activeCategory === cat.id;
-          return (
-            <motion.button
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`
-                flex items-center gap-2 px-5 py-3 rounded-full text-sm font-bold transition-all shadow-sm
-                ${isActive 
-                  ? `${cat.color} ${cat.text} shadow-lg ring-2 ring-offset-2 ring-transparent` 
-                  : 'bg-white text-stone-600 hover:bg-stone-50 border border-stone-200'}
-              `}
-            >
-              <cat.icon size={16} />
-              {cat.label}
-            </motion.button>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
+
 
 export const ServiceCard = ({ service, index }:any) => {
   // Dynamic color map
@@ -372,7 +138,7 @@ export const ServiceCard = ({ service, index }:any) => {
     blue: "bg-blue-50 text-blue-700 border-blue-100 group-hover:border-blue-200",
   };
 
-  const badgeColor = /*colors[service.color] ||*/ colors.orange;
+  const badgeColor = colors[service.color as keyof typeof colors] || colors.orange;
 
   return (
     <motion.div
@@ -449,6 +215,9 @@ export const ServiceCard = ({ service, index }:any) => {
 };
 
 export const HeroSection = () => {
+
+  const navigate = useNavigate();
+
   return (
     <div className="relative pt-12 pb-8 px-4 sm:px-8 max-w-7xl mx-auto">
       <div className="bg-stone-900 rounded-[2.5rem] p-8 sm:p-12 lg:p-16 text-white relative overflow-hidden">
@@ -474,10 +243,10 @@ export const HeroSection = () => {
             </p>
             
             <div className="flex flex-wrap gap-4">
-              <button className="px-6 py-3 bg-white text-stone-900 rounded-full font-bold hover:bg-orange-50 transition-colors">
+              <button onClick={()=> navigate('/search')} className="px-6 py-3 bg-white text-stone-900 rounded-full font-bold hover:bg-orange-50 transition-colors cursor-pointer">
                 Create New Event
               </button>
-              <button className="px-6 py-3 bg-transparent border border-white/20 text-white rounded-full font-bold hover:bg-white/10 transition-colors">
+              <button className="px-6 py-3 bg-transparent border border-white/20 text-white rounded-full font-bold hover:bg-white/10 transition-colors cursor-pointer">
                 View My Bookings
               </button>
             </div>
@@ -488,12 +257,231 @@ export const HeroSection = () => {
   );
 };
 
+
+
+const VenueShowcase = ({ services }: { services: any[] }) => {
+    return (
+        <section className="py-20 px-4 max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-12">
+                <div>
+                    <h2 className="text-sm font-bold text-orange-600 uppercase tracking-widest mb-2">The Foundation</h2>
+                    <h3 className="font-serif text-4xl md:text-5xl text-stone-900">Breathtaking Venues</h3>
+                </div>
+                <p className="max-w-md text-stone-500 mt-4 md:mt-0 text-right md:text-left">
+                    Find the perfect backdrop for your story. From historic ballrooms to modern rooftop gardens.
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                {/* Featured Large Card */}
+                <div className="lg:col-span-7">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6 }}
+                        className="relative h-[500px] rounded-3xl overflow-hidden group cursor-pointer"
+                    >
+                        <img src="https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=1200" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Featured Venue" />
+                        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent" />
+                        <div className="absolute bottom-0 left-0 p-8 text-white">
+                            <div className="bg-orange-500 text-xs font-bold px-3 py-1 rounded-full inline-block mb-3">Editor's Choice</div>
+                            <h4 className="font-serif text-3xl mb-2">The Grand Victorian Estate</h4>
+                            <p className="text-stone-300 line-clamp-2 max-w-lg mb-4">An architectural masterpiece featuring lush gardens and a ballroom that whispers history.</p>
+                            <span className="flex items-center gap-2 text-sm font-bold border-b border-white/30 pb-1 w-fit">Explore Venue <ArrowRight size={14}/></span>
+                        </div>
+                    </motion.div>
+                </div>
+                
+                {/* Side List */}
+                <div className="lg:col-span-5 flex flex-col gap-6">
+                    {services.slice(0, 2).map((service, idx) => (
+                         <motion.div 
+                            key={service.id}
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.1, duration: 0.5 }}
+                         >
+                            <ServiceCard service={service} variant="minimal" />
+                         </motion.div>
+                    ))}
+                    <button className="w-full py-4 border-2 border-stone-200 rounded-2xl text-stone-600 font-bold hover:border-orange-500 hover:text-orange-500 transition-colors flex items-center justify-center gap-2">
+                        View All Venues <ChevronRight size={16} />
+                    </button>
+                </div>
+            </div>
+        </section>
+    )
+}
+
+// 2. PHOTOGRAPHY - Dark Mode, Cinematic, Gallery Grid
+const PhotographyShowcase = ({ services }: { services: any[] }) => {
+    return (
+        <section className="py-24 bg-stone-900 text-white overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-900/10 blur-3xl rounded-full pointer-events-none" />
+            <div className="max-w-7xl mx-auto px-4 relative z-10">
+                <div className="text-center mb-16">
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        className="inline-flex items-center justify-center p-3 rounded-full bg-white/5 border border-white/10 mb-6"
+                    >
+                        <Camera size={20} className="text-blue-400 mr-2" />
+                        <span className="text-sm font-medium tracking-wide">Capture The Emotion</span>
+                    </motion.div>
+                    <h3 className="font-serif text-5xl mb-6">Cinematic Memories</h3>
+                    <p className="text-stone-400 max-w-2xl mx-auto text-lg">
+                        Talented storytellers who freeze time. Find photographers who match your aesthetic, from moody & dramatic to bright & airy.
+                    </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {services.map((service, idx) => (
+                        <motion.div 
+                            key={service.id}
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            transition={{ delay: idx * 0.2 }}
+                            className={`${idx === 1 ? 'md:-mt-12' : ''}`}
+                        >
+                            <ServiceCard service={service} variant="dark" />
+                        </motion.div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    )
+}
+
+// 3. CATERING - Clean, Delicious, Circular Accents
+const CateringShowcase = ({ services }: { services: any[] }) => {
+    return (
+        <section className="py-20 bg-stone-50 relative">
+            <div className="max-w-7xl mx-auto px-4">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                    <div className="order-2 md:order-1">
+                        <div className="grid grid-cols-2 gap-4">
+                            <motion.img 
+                                whileHover={{ scale: 1.05 }}
+                                src="https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&q=80&w=600" 
+                                className="rounded-t-[4rem] rounded-b-2xl h-64 w-full object-cover shadow-xl" 
+                                alt="Food 1" 
+                            />
+                            <motion.img 
+                                whileHover={{ scale: 1.05 }}
+                                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=600" 
+                                className="rounded-t-2xl rounded-b-[4rem] h-64 w-full object-cover mt-12 shadow-xl" 
+                                alt="Food 2" 
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="order-1 md:order-2">
+                        <div className="flex items-center gap-2 text-emerald-600 mb-4 font-bold tracking-widest text-sm uppercase">
+                            <Utensils size={18} />
+                            <span>A Taste of Excellence</span>
+                        </div>
+                        <h3 className="font-serif text-5xl text-stone-900 mb-6 leading-tight">
+                            Exquisite Flavors for <br/>Your Guests
+                        </h3>
+                        <p className="text-stone-600 text-lg mb-8 leading-relaxed">
+                            From farm-to-table freshness to avant-garde culinary art. Explore caterers who transform simple ingredients into unforgettable experiences.
+                        </p>
+                        
+                        <div className="space-y-4">
+                            <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm border border-stone-100">
+                                <div className="bg-emerald-100 p-3 rounded-full text-emerald-600"><Check size={20}/></div>
+                                <div>
+                                    <h4 className="font-bold text-stone-900">Customized Menus</h4>
+                                    <p className="text-sm text-stone-500">Tailored to your dietary needs and theme.</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-4 p-4 bg-white rounded-xl shadow-sm border border-stone-100">
+                                <div className="bg-emerald-100 p-3 rounded-full text-emerald-600"><User size={20}/></div>
+                                <div>
+                                    <h4 className="font-bold text-stone-900">Top-Tier Service</h4>
+                                    <p className="text-sm text-stone-500">Professional waitstaff and bartenders.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button className="mt-8 bg-stone-900 text-white px-8 py-3 rounded-full font-bold hover:bg-emerald-700 transition-colors">
+                            Find Caterers
+                        </button>
+                    </div>
+                 </div>
+            </div>
+        </section>
+    )
+}
+
+// 4. MUSIC - Vibrant, Gradient, Energetic
+const MusicShowcase = ({ services }: { services: any[] }) => {
+    return (
+        <section className="py-20 relative overflow-hidden">
+            {/* Background Gradient */}
+            <div className="absolute inset-0 bg-linear-to-r from-purple-900 via-indigo-900 to-purple-800 text-white" />
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            
+            <div className="max-w-7xl mx-auto px-4 relative z-10">
+                <div className="flex justify-between items-center mb-12">
+                     <h3 className="font-serif text-4xl md:text-5xl text-white">Set The Vibe</h3>
+                     <div className="hidden md:flex gap-2">
+                         <button className="p-3 bg-white/10 hover:bg-white/20 rounded-full backdrop-blur-md transition-colors"><ChevronRight className="rotate-180" /></button>
+                         <button className="p-3 bg-white text-purple-900 rounded-full hover:bg-stone-200 transition-colors"><ChevronRight /></button>
+                     </div>
+                </div>
+
+                <div className="flex gap-6 overflow-x-auto pb-8 no-scrollbar snap-x">
+                    {services.map((service, idx) => (
+                        <motion.div 
+                            key={idx}
+                            className="min-w-[300px] md:min-w-[350px] snap-center"
+                            whileHover={{ y: -10 }}
+                        >
+                            <div className="bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl h-full hover:bg-white/20 transition-colors">
+                                <div className="relative h-48 rounded-xl overflow-hidden mb-4">
+                                     <img src={service.image} className="w-full h-full object-cover" alt={service.title} />
+                                     <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 hover:opacity-100 transition-opacity">
+                                         <div className="bg-white/20 backdrop-blur-lg p-3 rounded-full border border-white/50">
+                                            <Play size={24} className="fill-white text-white ml-1" />
+                                         </div>
+                                     </div>
+                                </div>
+                                <h4 className="text-xl font-bold mb-1">{service.title}</h4>
+                                <div className="flex gap-2 text-sm text-purple-200 mb-3">
+                                    {service.tags.map((t:string) => <span key={t}>#{t}</span>)}
+                                </div>
+                                <div className="flex justify-between items-center border-t border-white/10 pt-3">
+                                    <span className="font-bold text-lg">${service.price}</span>
+                                    <div className="flex items-center gap-1 text-sm"><Star size={14} className="fill-orange-400 text-orange-400"/> {service.rating}</div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                    
+                    {/* CTA Card */}
+                    <div className="min-w-[200px] flex items-center justify-center">
+                        <button className="flex flex-col items-center gap-3 text-white/70 hover:text-white transition-colors group">
+                            <div className="w-16 h-16 rounded-full border-2 border-white/30 flex items-center justify-center group-hover:border-white group-hover:bg-white/10 transition-all">
+                                <ArrowRight size={24} />
+                            </div>
+                            <span className="font-bold">View All DJs</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    )
+}
+
+
+
 // --- MAIN PAGE ---
 
 export const Home = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [filteredServices, setFilteredServices] = useState(SERVICES);
-
+  
   useEffect(() => {
     if (activeCategory === 'all') {
       setFilteredServices(SERVICES);
@@ -534,6 +522,11 @@ export const Home = () => {
           </div>
         </div>
 
+        <VenueShowcase services={SERVICES.filter(s => s.category === 'venue')} />
+        <PhotographyShowcase services={SERVICES.filter(s => s.category === 'photography')} />
+        <CateringShowcase services={SERVICES.filter(s => s.category === 'catering')} />
+        <MusicShowcase services={SERVICES.filter(s => s.category === 'music' || s.category === 'dj')} />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <motion.div 
             layout
@@ -553,7 +546,10 @@ export const Home = () => {
             </div>
           )}
         </div>
+        <Footer/>
       </main>
+
+  
     </div>
   );
 };
