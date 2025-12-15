@@ -1,6 +1,5 @@
 import { userInstance } from "../../utils/axiosFactory";
 import { ROUTES } from "../../constants/routes";
-import type { IPreference } from "../../interfaces/user";
 
 export const signupUser = async (userData: any) => {
   try {
@@ -101,31 +100,7 @@ export const createArticle = async (articleData: FormData) => {
   }
 };
 
-export const getPreferenceArticles = async (
-  preferences: IPreference[],
-  limit: number,
-  articleSet: number,
-  userId: string
-) => {
-  try {
-    const response = await userInstance.get(ROUTES.user.preferenceArticles, {
-      params: {
-        preferences: JSON.stringify(preferences), 
-        limit,
-        articleSet,
-        userId,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    console.error("Error in fetching preference articles:", error);
-    throw {
-      message:
-        error.response?.data?.message || "Failed to fetch preference articles",
-      code: error.response?.data?.code || "SERVER_ERROR",
-    };
-  }
-};
+
 
 export const getMyArticles = async (
   // limit: number,

@@ -3,7 +3,6 @@ import { uploadFileToS3 } from "../../../helpers/uploadS3";
 import { HttpStatusCode } from "../../../utils/enum";
 import IProfileService from "../../interfaces/user/IProfileService";
 import IUserRepository from "../../../repositories/interfaces/IUserRepository";
-import ICategoryRepository from "../../../repositories/interfaces/IcategoryRepository";
 
 interface IProfile {
   buffer: Buffer;
@@ -25,7 +24,7 @@ export default class ProfileService implements IProfileService {
   
   constructor(
     @inject("IUserRepository") private _userRepository : IUserRepository,
-    @inject("ICategoryRepository") private _categoryRepository : ICategoryRepository
+
   ){}
 
 
@@ -65,13 +64,7 @@ async updateProfileImageService(userId: string, profile: IProfile | undefined): 
 
             let { password, ...rest } = updatedData.toObject();
 
-            let preferences = await Promise.all(
-                rest.preferences.map(async (prefId:string) => {
-                  
-                  let prefData = await this._categoryRepository.findOne({ _id: prefId });
-                  return { _id: prefData?._id, name: prefData?.name };
-                })
-              );
+        
             
               let newUser = {
                 _id: rest._id,
@@ -80,7 +73,6 @@ async updateProfileImageService(userId: string, profile: IProfile | undefined): 
                 phone: rest.phone,
                 email: rest.email,
                 profile: rest.profile || "",
-                preferences: preferences,
               }
 
             return { userData: newUser};
@@ -121,12 +113,7 @@ async updateProfileService(profileData: IProfileData): Promise<any> {
 
     let { password, ...rest } = updatedData.toObject();
 
-            let newPreferences = await Promise.all(
-                rest.preferences.map(async (prefId:string) => {
-                  let prefData = await this._categoryRepository.findOne({ _id: prefId });
-                  return { _id: prefData?._id, name: prefData?.name };
-                })
-              );
+       
 
     let newUser = {
         _id: rest._id,
@@ -135,7 +122,6 @@ async updateProfileService(profileData: IProfileData): Promise<any> {
         phone: rest.phone,
         email: rest.email,
         profile: rest.profile || "",
-        preferences: newPreferences,
     };
 
     return { userData: newUser };

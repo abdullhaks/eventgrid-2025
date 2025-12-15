@@ -1,11 +1,11 @@
+
 import { Document, Types } from "mongoose";
 
-export interface IUserDocument extends Document {
+export interface IAdminDocument extends Document {
 
     _id: Types.ObjectId;
     firstName: string,
     lastName: string,
-    phone: string,
     email: string,
     password: string,
     profile: string,
@@ -13,4 +13,4 @@ export interface IUserDocument extends Document {
     updatedAt: Date;
     
 }
-export interface userDocument extends IUserDocument {}
+export interface adminDocument extends IAdminDocument {}

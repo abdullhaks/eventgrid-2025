@@ -1,93 +1,24 @@
 import bcrypt from 'bcryptjs';
-import { userLoginRequestDto, userSignupRequestDto } from '../../../dto/userDto';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../../../utils/jwt';
 import { HttpStatusCode } from '../../../utils/enum';
-import IAuthService from '../../interfaces/user/IAuthService';
+import IAdminAuthService from '../../interfaces/admin/IAdminAuthService'; 
 import { inject, injectable } from 'inversify';
 import IUserRepository from '../../../repositories/interfaces/IUserRepository';
+import { adminLoginRequestDto } from '../../../dto/adminDto';
 
 
 @injectable()
-export default class AuthService implements IAuthService {
+export default class AdminAuthService implements IAdminAuthService {
 
 constructor(
   @inject("IUserRepository") private _userRepository : IUserRepository ,
 ){};
 
 
-async signupUser(userData: userSignupRequestDto): Promise<any> {
-  console.log("user data from service....", userData);
-
-  if (!userData.email || !userData.password || !userData.confirmPassword || !userData.firstName || !userData.lastName || !userData.phone ) {
-    throw {
-      status: HttpStatusCode.BAD_REQUEST,
-      message: "Please provide all required fields",
-      code: "MISSING_FIELDS"
-    };
-  }
-
-  if (userData.password !== userData.confirmPassword) {
-    throw {
-      status: HttpStatusCode.BAD_REQUEST,
-      message: "Passwords do not match",
-      code: "PASSWORD_MISMATCH"
-    };
-  }
-
-
-  const existingUser = await this._userRepository.findOne({ email: userData.email });
-  console.log("Existing user: ", existingUser);
-  if (existingUser) {
-    throw {
-      status: HttpStatusCode.CONFLICT,
-      message: "User already exists",
-      code: "USER_EXISTS"
-    };
-  }
-
-  const salt = await bcrypt.genSalt(10);
-  userData.password = await bcrypt.hash(userData.password, salt);
-
-  
-  const response = await this._userRepository.create(userData);
-
-  const {password,...rest} = response;
-
-
-    const accessToken = generateAccessToken({
-      id: response._id.toString(),
-      role: "user",
-    });
-    const refreshToken = generateRefreshToken({
-      id: response._id.toString(),
-      role: "user",
-    });
-
-
-  let newUser = {
-    _id: rest._id,
-    firstName: rest.firstName,
-    lastName: rest.lastName,
-    phone: rest.phone,
-    email: rest.email,
-    profile: rest.profile || "",
-  }
-
-  
-
-  return {
-    message: "Signup successful",
-    user: newUser,
-    accessToken,
-    refreshToken
-  };
-};
-
-
-  async loginUser(userData: userLoginRequestDto): Promise<any> {
+  async loginUser(userData: adminLoginRequestDto): Promise<any> {
     console.log("user data from service....", userData);
 
-    if (!userData.emailOrPhone || !userData.password) {
+    if (!userData.email || !userData.password) {
       throw {
         status: HttpStatusCode.BAD_REQUEST,
         message: "Please provide all required fields",
@@ -96,11 +27,11 @@ async signupUser(userData: userSignupRequestDto): Promise<any> {
     }
 
     let existingUser = await this._userRepository.findOne({
-      email: userData.emailOrPhone,
+      email: userData.email,
     });
     if (!existingUser) {
       existingUser = await this._userRepository.findOne({
-        phone: userData.emailOrPhone,
+        phone: userData.email,
       });
       if (!existingUser) {
         throw {

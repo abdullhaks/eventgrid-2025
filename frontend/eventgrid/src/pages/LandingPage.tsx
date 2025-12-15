@@ -99,7 +99,7 @@ const Navbar = () => {
           <a href="#" className="hover:text-orange-600 transition-colors">Talent</a>
           <a href="#" className="hover:text-orange-600 transition-colors">Catering</a>
           <a href="#" className="hover:text-orange-600 transition-colors">About</a>
-          <button onClick={()=>navigate('/start')} className="bg-black text-white px-6 py-2.5 rounded-full hover:bg-orange-600 transition-colors">
+          <button onClick={()=>navigate('/user/start')} className="bg-black text-white px-6 py-2.5 rounded-full hover:bg-orange-600 transition-colors">
             Book Now
           </button>
         </div>
@@ -123,7 +123,7 @@ const Navbar = () => {
               <a href="#" className="block py-2 border-b border-gray-100">Locations</a>
               <a href="#" className="block py-2 border-b border-gray-100">Talent</a>
               <a href="#" className="block py-2 border-b border-gray-100">Catering</a>
-              <button onClick={()=>navigate('/start')} className="bg-black text-white w-full py-3 rounded-xl mt-2">
+              <button onClick={()=>navigate('/user/start')} className="bg-black text-white w-full py-3 rounded-xl mt-2">
                 Get Started
               </button>
             </div>

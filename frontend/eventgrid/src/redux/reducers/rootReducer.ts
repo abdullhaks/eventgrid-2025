@@ -1,11 +1,13 @@
 import { type Action, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "../slices/userSlice"
-
+import adminReducer from '../slices/adminSlice'
 import { type IUser } from "../../interfaces/user";
+import type { IAdmin } from "../../interfaces/admin";
 
 
 interface RootState {
   user: { user: IUser | null };
+  admin: {admin:IAdmin | null };
 
 }
 
@@ -13,6 +15,8 @@ interface RootState {
 const appReducer = combineReducers({
 
     user:userReducer,
+    admin:adminReducer
+
 
 });
 

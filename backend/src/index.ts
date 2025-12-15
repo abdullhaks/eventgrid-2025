@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connectDB from "./config/dbConnection";
 import cors from "cors";
 import userRouter from "./routes/userRoutes";
+import adminRouter from "./routes/adminRoutes";
 
 
 dotenv.config();
@@ -30,6 +31,7 @@ app.use(cookieParser());
 
 
 app.use('/api/user',userRouter);
+app.use('/api/admin',adminRouter);
 
 
 

@@ -1,6 +1,7 @@
 
 import {BrowserRouter as Router , Routes , Route} from 'react-router-dom';
-import UserRoutes from './routes/userRoutes';
+import UserRoutes from './routes/user/userRoutes';
+import AdminRoutes from './routes/admin/adminRoutes';
 
 
 
@@ -15,6 +16,7 @@ function App() {
       
       <Routes>
         <Route path="/user/*" element={<UserRoutes />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
 
         <Route path="/*" element={<UserRoutes />} />
 

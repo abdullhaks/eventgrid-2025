@@ -140,4 +140,4 @@ const createAxiosInstance = (): AxiosInstance => {
 };
 
 export const userInstance = createAxiosInstance();
-// export const adminInstance = createAxiosInstance();
+export const adminInstance = createAxiosInstance();
