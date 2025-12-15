@@ -1,21 +1,22 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { LandingPage } from "../../pages/LandingPage";
-import { Home } from "../../pages/user/Home";
-import UserPublicRoute from "../user/publicRoutes";
-import UserPrivateRoute from "../user/privateRoutes";
+import AdminPublicRoute from "./publicRoutes";
+
+import AdminPrivateRoute from "./privateRoutes";
 // import { Profile } from "../../pages/Profile";
 import { SearchConsole } from "../../pages/user/SearchConsole";
 import AdminLogin from "../../pages/admin/AdminLogin";
-
+import Dashboard from "../../pages/admin/Dashboard";
+import AdminDashboard from "../../pages/admin/Dashboard";
 const UserRoutes = () => {
   return (
     <Routes>
-      <Route element={<UserPublicRoute />}>
+      <Route element={<AdminPublicRoute />}>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<AdminLogin />} />
       </Route>
-      <Route element={<UserPrivateRoute />}>
-        <Route path="/home" element={<Home />} />
+      <Route element={<AdminPrivateRoute />}>
+        <Route path="/dashboard" element={<AdminDashboard />} />
         <Route path="/search" element={<SearchConsole />} />
         {/* <Route path="/settings" element={<Profile />} />
         <Route path="/create" element={<CreateArticle />} />

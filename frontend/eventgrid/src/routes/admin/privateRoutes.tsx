@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { Outlet, Navigate } from "react-router-dom";
 import type { RootState } from "../../redux/store/store";
 
-const UserPrivateRoute = () => {
+const AdminPrivateRoute = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const {admin} = useSelector((state: RootState) => state.admin);
 
@@ -16,4 +16,4 @@ const UserPrivateRoute = () => {
 
 };
 
-export default UserPrivateRoute;
+export default AdminPrivateRoute;

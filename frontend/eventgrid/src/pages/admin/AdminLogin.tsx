@@ -2,7 +2,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { GridBackground } from "../../components/gridBackground";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { loginUser as welcome } from "../../redux/slices/userSlice";
+// import { login as welcome } from "../../redux/slices/userSlice";
+import { loginAdmin as welcome } from "../../redux/slices/adminSlice";
 import { message } from "antd";
 import { Mail, EyeOff, Eye, Loader2, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -92,7 +93,7 @@ function AdminLogin() {
 
     try {
       const response = await loginAdmin(formData);
-      dispatch(welcome({ user: response.user }));
+      dispatch(welcome({ admin: response.user }));
       message.success("Logged in successfully");
       navigate("/admin/dashboard");
     } catch (error: any) {
