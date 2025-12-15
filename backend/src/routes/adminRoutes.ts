@@ -13,6 +13,7 @@ const adminAuthCtrl = container.get<IAdminAuthController>("IAdminAuthController"
 
 
 adminRouter.post("/login",(req,res)=> adminAuthCtrl.login(req,res));
+adminRouter.post('/logout',(req,res)=>adminAuthCtrl.logout(req,res));
 
 
 

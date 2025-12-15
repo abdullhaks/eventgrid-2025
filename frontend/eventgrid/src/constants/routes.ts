@@ -23,6 +23,8 @@ export const ROUTES = {
   
   admin: {
     login: "/admin/login",
+    logout: "/admin/logout",
+
     
     
   },

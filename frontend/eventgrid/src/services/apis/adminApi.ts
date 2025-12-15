@@ -13,3 +13,13 @@ export const loginAdmin = async (adminData: any) => {
     throw error.response.data;
   }
 };
+
+export const logoutAdmin = async () => {
+  try {
+    const response = await adminInstance.post(ROUTES.admin.logout);
+    return response.data;
+  } catch (error) {
+    console.error("Error logging out user:", error);
+    throw error;
+  }
+};
