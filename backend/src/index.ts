@@ -14,7 +14,7 @@ const port = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL as string,"http://localhost:5173"],
+    origin: [process.env.CLIENT_URL as string,"http://localhost:5173","https://eventgrid-2025.vercel.app/"],
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
   })
