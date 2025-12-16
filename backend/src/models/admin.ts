@@ -1,10 +1,3 @@
-export interface IAdmin {
-  _id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  profile?: string;
-};
 
 import { Schema, model } from 'mongoose';
 import { adminDocument } from '../entities/adminEntity';

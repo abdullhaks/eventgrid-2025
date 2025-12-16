@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
+    "@hookform/resolvers": "^5.2.2",
     "@reduxjs/toolkit": "^2.9.0",
     "@tailwindcss/vite": "^4.1.14",
     "antd": "^5.27.4",
@@ -24,7 +25,7 @@
     "react-router-dom": "^7.9.4",
     "redux-persist": "^6.0.0",
     "tailwindcss": "^4.1.14",
-    "zod": "^4.1.12"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

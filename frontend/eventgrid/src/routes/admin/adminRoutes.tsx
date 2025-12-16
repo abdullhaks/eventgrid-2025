@@ -14,7 +14,7 @@ import Payments from "../../pages/admin/Payments";
 import Photography from "../../pages/admin/Photography";
 import Weddings from "../../pages/admin/Weddings";
 import CancelledBookings from "../../pages/admin/CancelledBookings";
-const UserRoutes = () => {
+const AdminRoutes = () => {
   return (
     <Routes>
       <Route element={<AdminPublicRoute />}>
@@ -22,9 +22,8 @@ const UserRoutes = () => {
         <Route path="/login" element={<AdminLogin />} />
       </Route>
 
-      
       <Route element={<AdminPrivateRoute />}>
-       <Route element={<Layout />}>
+        <Route element={<Layout />}>
           <Route path="/dashboard" element={<Overview />} />
           <Route path="/bookings" element={<Bookings />} />
           <Route path="/photography" element={<Photography />} />
@@ -33,15 +32,12 @@ const UserRoutes = () => {
           <Route path="/music" element={<Music />} />
           <Route path="/payments" element={<Payments />} />
           <Route path="/returns" element={<CancelledBookings />} />
-        
+        </Route>
       </Route>
-     </Route>
 
       <Route path="*" element={<Navigate to="/" />} />
-      
-
     </Routes>
   );
 };
 
-export default UserRoutes;
+export default AdminRoutes;
