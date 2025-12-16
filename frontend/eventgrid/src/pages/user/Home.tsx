@@ -1,17 +1,18 @@
-import{ useState, useEffect, useRef } from 'react';
+import{ useState, useEffect,} from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, MapPin, Star, Filter, Music, Camera, Utensils, Home as HOMEICON, Heart,
-  Calendar,User,LogOut,Sparkles,Zap,
+import { MapPin, Star, Camera, Utensils,  Heart,
+  //  Filter, Search,LogOut, Calendar, Music,Home as HOMEICON,
+ User,Sparkles,Zap,
   Check,
   ArrowRight,
   ChevronRight,
   Play} from 'lucide-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { logoutUser as logout } from "../../services/apis/userApi";
-import { logoutUser } from "../../redux/slices/userSlice";
-import type { IUser } from '../../interfaces/user';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { logoutUser as logout } from "../../services/apis/userApi";
+// import { logoutUser } from "../../redux/slices/userSlice";
+// import type { IUser } from '../../interfaces/user';
 import { useNavigate } from 'react-router-dom';
-import ConfirmModal from '../../components/ConfirmModal';
+// import ConfirmModal from '../../components/ConfirmModal';
 import { Footer } from '../LandingPage';
 import { Navbar } from '../../components/Navbar';
 import { CategoryFilter } from '../../components/CategoryFilter';
@@ -20,18 +21,18 @@ import { CategoryFilter } from '../../components/CategoryFilter';
 
 
 
-const CATEGORIES = [
-  { id: 'all', label: 'All', icon: Sparkles, color: 'bg-stone-900', text: 'text-white' },
-  { id: 'venue', label: 'Venues', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-  { id: 'wedding_planners', label: 'Wedding Planners', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-  { id: 'destination_wedding', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-  { id: 'corporate_event', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-  { id: 'beach_wedding', label: 'Beach Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-  { id: 'music_and_entertainment', label: 'Music and Entertainment', icon: Music, color: 'bg-purple-600', text: 'text-white' },
-  { id: 'private_parties', label: 'Private Parties', icon: Music, color: 'bg-purple-600', text: 'text-white' },
-  { id: 'catering', label: 'Catering Service', icon: Utensils, color: 'bg-emerald-600', text: 'text-white' },
-  { id: 'photography&videography', label: 'Photography & Videography', icon: Camera, color: 'bg-blue-600', text: 'text-white' },
-];
+// const CATEGORIES = [
+//   { id: 'all', label: 'All', icon: Sparkles, color: 'bg-stone-900', text: 'text-white' },
+//   { id: 'venue', label: 'Venues', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+//   { id: 'wedding_planners', label: 'Wedding Planners', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+//   { id: 'destination_wedding', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+//   { id: 'corporate_event', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+//   { id: 'beach_wedding', label: 'Beach Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+//   { id: 'music_and_entertainment', label: 'Music and Entertainment', icon: Music, color: 'bg-purple-600', text: 'text-white' },
+//   { id: 'private_parties', label: 'Private Parties', icon: Music, color: 'bg-purple-600', text: 'text-white' },
+//   { id: 'catering', label: 'Catering Service', icon: Utensils, color: 'bg-emerald-600', text: 'text-white' },
+//   { id: 'photography&videography', label: 'Photography & Videography', icon: Camera, color: 'bg-blue-600', text: 'text-white' },
+// ];
 
 const SERVICES = [
   {
@@ -353,7 +354,7 @@ const PhotographyShowcase = ({ services }: { services: any[] }) => {
 }
 
 // 3. CATERING - Clean, Delicious, Circular Accents
-const CateringShowcase = ({ services }: { services: any[] }) => {
+const CateringShowcase = (/*{ services }: { services: any[] }*/) => {
     return (
         <section className="py-20 bg-stone-50 relative">
             <div className="max-w-7xl mx-auto px-4">
@@ -524,7 +525,7 @@ export const Home = () => {
 
         <VenueShowcase services={SERVICES.filter(s => s.category === 'venue')} />
         <PhotographyShowcase services={SERVICES.filter(s => s.category === 'photography')} />
-        <CateringShowcase services={SERVICES.filter(s => s.category === 'catering')} />
+        <CateringShowcase /*services={SERVICES.filter(s => s.category === 'catering')}*/ />
         <MusicShowcase services={SERVICES.filter(s => s.category === 'music' || s.category === 'dj')} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-8">

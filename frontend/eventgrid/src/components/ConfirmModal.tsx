@@ -16,14 +16,14 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({ message, onConfirm, onCance
         <div className="flex justify-center sm:justify-end space-x-4">
           <button
             onClick={onCancel}
-            className="px-4 py-2 sm:px-6 sm:py-3 min-h-[44px] bg-gray-200 text-gray-700 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-300 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
+            className="px-4 py-2 sm:px-6 sm:py-3 min-h-11 bg-gray-200 text-gray-700 rounded-lg text-sm sm:text-base font-semibold hover:bg-gray-300 hover:shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-1"
             aria-label="Cancel"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 sm:px-6 sm:py-3 min-h-[44px] bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg text-sm sm:text-base font-semibold hover:from-red-600 hover:to-red-700 hover:shadow-md transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1"
+            className="px-4 py-2 sm:px-6 sm:py-3 min-h-11 bg-linear-to-r from-red-500 to-red-600 text-white rounded-lg text-sm sm:text-base font-semibold hover:from-red-600 hover:to-red-700 hover:shadow-md transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-1"
             aria-label="Confirm Logout"
           >
             Logout

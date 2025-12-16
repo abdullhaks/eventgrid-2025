@@ -1,7 +1,9 @@
 // Layout.tsx
 import { useState, useEffect, useRef } from 'react';
 import { LayoutDashboard, Camera, Utensils, HeartHandshake, Music, CreditCard, 
-  RotateCcw, DollarSign, Bell, Search, Menu, ChevronDown, User, LogOut } from 'lucide-react';
+  RotateCcw, Bell,  Menu, ChevronDown, User, LogOut ,
+// Search,DollarSign,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logoutAdmin } from '../../redux/slices/adminSlice';

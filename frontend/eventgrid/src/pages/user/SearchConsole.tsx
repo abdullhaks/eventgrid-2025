@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Search, MapPin, Star, Filter, Music, Camera, Utensils, 
-  Home as HOMEICON, Heart, Calendar, User, LogOut, Sparkles, 
-  Zap, Check, ArrowRight, Play, Instagram, ChevronRight, X, SlidersHorizontal
+  Search, MapPin, Star,  Music, Camera, Utensils, 
+  Home as HOMEICON, User, Sparkles, 
+  ArrowRight,  SlidersHorizontal,
+//   Filter,Heart, Calendar, LogOut, Play, Instagram, ChevronRight, X, Zap, Check,
 } from 'lucide-react';
 import { Navbar } from '../../components/Navbar';
 import { CategoryFilter } from '../../components/CategoryFilter';

@@ -1,11 +1,6 @@
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { Search, MapPin, Star, Filter, Music, Camera, Utensils, Home as HOMEICON, Heart,
-  Calendar,User,LogOut,Sparkles,Zap,
-  Check,
-  ArrowRight,
-  ChevronRight,
-  Play} from 'lucide-react';
+import { Music, Camera, Utensils, Home as HOMEICON,Sparkles} from 'lucide-react';
 
 
 const CATEGORIES = [
