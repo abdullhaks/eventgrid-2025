@@ -6,17 +6,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { type IPhotoAndVideoDocument } from '../../interfaces/photoAndVideo';
 
 // Placeholder API function - replace with your actual adminApi call
-const addPhotoService = async (formData: FormData): Promise<void> => {
-  // Example: await adminApi.addPhotoAndVideoService(formData);
-  // For now, simulate API call
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      console.log('Submitting to backend:', formData);
-      // reject(new Error('Simulated backend error')); // Uncomment to test error
-      resolve();
-    }, 1000);
-  });
-};
+// const addPhotoService = async (formData: FormData): Promise<void> => {
+//   // Example: await adminApi.addPhotoAndVideoService(formData);
+//   // For now, simulate API call
+//   return new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//       console.log('Submitting to backend:', formData);
+//       // reject(new Error('Simulated backend error')); // Uncomment to test error
+//       resolve();
+//     }, 1000);
+//   });
+// };
 
 const districtsOfKerala = [
   'Alappuzha', 'Ernakulam', 'Idukki', 'Kannur', 'Kasaragod', 'Kollam',
@@ -172,7 +172,7 @@ const getStatusBadge = (status: number) => {
 };
 
 const AddModal = ({ open, onClose, onSubmit }: { open: boolean; onClose: () => void; onSubmit: (data: FormData) => Promise<void> }) => {
-  const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch, setError, clearErrors } = useForm<FormData>({
+  const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch, /*setError,*/  clearErrors } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   });
 
@@ -311,6 +311,8 @@ const Photography = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const fetchData = async () => {
+    console.log(loading);
+    
     setLoading(true);
     const dummyGet = new Promise<{ data: IPhotoAndVideoDocument[]; totalPages: number }>((resolve) => {
       setTimeout(() => {
