@@ -4,10 +4,16 @@ import AdminPublicRoute from "./publicRoutes";
 
 import AdminPrivateRoute from "./privateRoutes";
 // import { Profile } from "../../pages/Profile";
-import { SearchConsole } from "../../pages/user/SearchConsole";
 import AdminLogin from "../../pages/admin/AdminLogin";
-import Dashboard from "../../pages/admin/Dashboard";
-import AdminDashboard from "../../pages/admin/Dashboard";
+import Layout from "../../pages/admin/Layout";
+import { Music } from "lucide-react";
+import Bookings from "../../pages/admin/Bookings";
+import Catering from "../../pages/admin/Catering";
+import Overview from "../../pages/admin/Overview";
+import Payments from "../../pages/admin/Payments";
+import Photography from "../../pages/admin/Photography";
+import Weddings from "../../pages/admin/Weddings";
+import CancelledBookings from "../../pages/admin/CancelledBookings";
 const UserRoutes = () => {
   return (
     <Routes>
@@ -15,15 +21,21 @@ const UserRoutes = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<AdminLogin />} />
       </Route>
+
+      
       <Route element={<AdminPrivateRoute />}>
-        <Route path="/dashboard" element={<AdminDashboard />} />
-        <Route path="/search" element={<SearchConsole />} />
-        {/* <Route path="/settings" element={<Profile />} />
-        <Route path="/create" element={<CreateArticle />} />
-        <Route path="/edit/:articleId" element={<CreateArticle editMode={true} />} /> */}
+       <Route element={<Layout />}>
+          <Route path="/dashboard" element={<Overview />} />
+          <Route path="/bookings" element={<Bookings />} />
+          <Route path="/photography" element={<Photography />} />
+          <Route path="/catering" element={<Catering />} />
+          <Route path="/weddings" element={<Weddings />} />
+          <Route path="/music" element={<Music />} />
+          <Route path="/payments" element={<Payments />} />
+          <Route path="/returns" element={<CancelledBookings />} />
         
       </Route>
-      {/* <Route path="/article/:articleId" element={<ArticleView />} /> */}
+     </Route>
 
       <Route path="*" element={<Navigate to="/" />} />
       
