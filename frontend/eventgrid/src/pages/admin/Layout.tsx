@@ -90,8 +90,9 @@ const Layout = () => {
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         <div className="h-16 flex items-center gap-3 px-6 border-b border-slate-800">
-          <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">E</div>
-          <span className="font-bold text-white text-xl tracking-tight">EventGlow</span>
+          {/* <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">E</div> */}
+          <span className="font-bold text-white text-xl tracking-tight">Eventgrid</span>
+          <span className="text-white text-sm tracking-tight">Admin</span>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-6 no-scrollbar">
