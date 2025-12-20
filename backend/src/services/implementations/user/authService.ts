@@ -181,6 +181,41 @@ async verifyOtp(verifyData: otpVerifyRequestDto): Promise<any> {
       }
     }
 
+    if(!existingUser.isValidated){
+
+        const otp = generateOtp();
+
+  await this._otpRepository.create({
+    otp:otp,
+    email:existingUser.email
+  }).then(()=>{
+    console.log("otp created");
+  })
+  
+
+   const mailOptions = generateOtpMail(existingUser.email, otp, '2 minutes');
+    console.log("Mail options: ", mailOptions);
+    try {
+      const result = transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("Error sending email: ", error);
+          throw new Error("Error sending email");
+        }
+        console.log("Email sent: ", info.response);
+      });
+    } catch (error) {
+      console.log(error);
+      throw new Error("Error in sending mail");
+    }
+
+      throw {
+        status: HttpStatusCode.MOVED_PERMANENTLY,
+        message: "Please verify your email before logging in",
+        code: "EMAIL_NOT_VERIFIED",
+      };
+    };
+
+
     const isPasswordValid = await bcrypt.compare(
       userData.password,
       existingUser.password

@@ -90,13 +90,16 @@ export const Login = ({ onNavigate }:any) => {
 
     try {
       const response = await loginUser(formData);
+      console.log("login reponse",response)
       dispatch(welcome({ user: response.user }));
       message.success("Logged in successfully");
       navigate("/user/home");
     } catch (error: any) {
       console.error("Login error:", error);
       const errorMessage = error.message || "Failed to log in";
-      if (errorMessage.includes("Invalid credentials")) {
+      if(error.code==="EMAIL_NOT_VERIFIED"){
+        onNavigate("otp");
+      }else if (errorMessage.includes("Invalid credentials")) {
         // setErrors((prev) => ({
         //   ...prev,
         //   emailOrPhone: "Invalid email/phone ",

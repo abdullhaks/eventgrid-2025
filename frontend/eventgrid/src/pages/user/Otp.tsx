@@ -128,7 +128,7 @@ export const Otp = ({ onNavigate }:any) => {
         
         <div className="flex justify-end">
           <button type="button" className="text-sm font-medium text-orange-600 hover:text-orange-700">
-            Resent Password;
+            Resent Password
           </button>
         </div>
 
