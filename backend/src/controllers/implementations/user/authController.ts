@@ -23,23 +23,22 @@ async signup(req: Request, res: Response): Promise<void> {
 
     console.log("user details is ", userDetails);
 
-    
     const response = await this._authService.signupUser(userDetails);
 
     console.log("user is ", response.user);
-    res.cookie("eventgrid_refreshToken", response.refreshToken, {
-        httpOnly: true,
-        sameSite: "none", // allow cross-site
-        secure: true, // only over HTTPS
-        maxAge: parseInt(process.env.MAX_AGE || "604800000"),
-      });
+    // res.cookie("eventgrid_refreshToken", response.refreshToken, {
+    //     httpOnly: true,
+    //     sameSite: "none", // allow cross-site
+    //     secure: true, // only over HTTPS
+    //     maxAge: parseInt(process.env.MAX_AGE || "604800000"),
+    //   });
 
-      res.cookie("eventgrid_accessToken", response.accessToken, {
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-        maxAge: parseInt(process.env.MAX_AGE || "604800000"),
-      });
+    //   res.cookie("eventgrid_accessToken", response.accessToken, {
+    //     httpOnly: true,
+    //     sameSite: "none",
+    //     secure: true,
+    //     maxAge: parseInt(process.env.MAX_AGE || "604800000"),
+    //   });
       
     res.status(HttpStatusCode.CREATED).json(response.user);
   } catch (error: any) {
@@ -50,6 +49,25 @@ async signup(req: Request, res: Response): Promise<void> {
     });
   }
 };
+
+
+async verifyOtp(req: Request, res: Response): Promise<void> {
+  
+  try{
+
+    const {email,otp} = req.body;
+    
+      const otpRecord = await this._authService.verifyOtp({email, otp});
+      res.status(HttpStatusCode.OK).json({ otp, email });
+
+  }catch(error:any){
+    console.error("Error in verify otp:", error);
+    res.status(error.status || HttpStatusCode.INTERNAL_SERVER_ERROR).json({
+      message: error.message || MESSAGES.server.serverError,
+      code: error.code || 'SERVER_ERROR'
+    });
+  }
+}
 
   async login(req: Request, res: Response): Promise<void> {
     try {

@@ -14,18 +14,20 @@ export const signupUser = async (userData: any) => {
   }
 };
 
-export const getCategories = async () => {
+
+export const verifyOtp = async (verfiData: any) => {
   try {
-    const response = await userInstance.get(ROUTES.user.category);
+    const response = await userInstance.post(ROUTES.user.verifyOtp, verfiData);
     return response.data;
   } catch (error: any) {
-    console.error("Error signing up user:", error);
+    console.error("Error in verify user otp:", error);
     throw {
-      message: error.response?.data?.message || "Failed to fetch categories",
+      message: error.response?.data?.message || "Failed to verify otp",
       code: error.response?.data?.code || "SERVER_ERROR",
     };
   }
 };
+
 
 export const loginUser = async (userData: any) => {
   try {
@@ -61,83 +63,7 @@ export const logoutUser = async () => {
   }
 };
 
-export const getArticle = async (articleId: string, userId?: string) => {
-  try {
-    console.log("In getArticle API with:", { articleId, userId });
-    const response = await userInstance.get(ROUTES.user.article, {
-      params: {
-        articleId,
-        userId, 
-      },
-    });
 
-    console.log("Article API response:", response);
-
-    return response.data;
-  } catch (error: any) {
-    console.error("Error in fetching article:", error);
-    throw {
-      message: error.response?.data?.message || "Failed to fetch article",
-      code: error.response?.data?.code || "SERVER_ERROR",
-    };
-  }
-};
-
-export const createArticle = async (articleData: FormData) => {
-  console.log("herere.e.e...e.");
-  try {
-    const response = await userInstance.post(
-      ROUTES.user.articleCreate,
-      articleData
-    );
-    return response.data;
-  } catch (error: any) {
-    console.error("Article posting failed:", error);
-    throw {
-      message: error.response?.data?.message || "Failed to sign up",
-      code: error.response?.data?.code || "SERVER_ERROR",
-    };
-  }
-};
-
-
-
-export const getMyArticles = async (
-  // limit: number,
-  // articleSet: number,
-  userId: string
-) => {
-  try {
-    const response = await userInstance.get(ROUTES.user.myArticle, {
-      params: {
-        userId,
-      },
-    });
-    return response.data;
-  } catch (error: any) {
-    console.error("Error in fetching preference articles:", error);
-    throw {
-      message:
-        error.response?.data?.message || "Failed to fetch preference articles",
-      code: error.response?.data?.code || "SERVER_ERROR",
-    };
-  }
-};
-
-export const deleteArticle = async (articleId: string) => {
-  try {
-    const response = await userInstance.delete(
-      `${ROUTES.user.article}/${articleId}`
-    );
-    return response.data;
-  } catch (error: any) {
-    console.error("Error in deleting article:", error);
-    throw {
-      message: error.response?.data?.message || "Failed to delete article",
-      code: error.response?.data?.code || "SERVER_ERROR",
-    };
-  }
-};
 
 export const updateProfile = async (profileData: any) => {
   try {
@@ -171,38 +97,5 @@ export const updateProfileImage = async (imageData: FormData) => {
 
 
 
-export const likeArticle = async (articleId: string, userId: string) => {
-  try {
-    console.log("In likeArticle API with:", { articleId, userId });
-    const response = await userInstance.post(ROUTES.user.likeArticle, {
-      articleId,
-      userId,
-    });
-    return response.data;
-  } catch (error: any) {
-    console.error("Error in liking article:", error);
-    throw {
-      message: error.response?.data?.message || "Failed to like article",
-      code: error.response?.data?.code || "SERVER_ERROR",
-    };
-  }
-};
-
-export const dislikeArticle = async (articleId: string, userId: string) => {
-  try {
-    console.log("In dislikeArticle API with:", { articleId, userId });
-    const response = await userInstance.post(ROUTES.user.dislikeArticle, {
-      articleId,
-      userId,
-    });
-    return response.data;
-  } catch (error: any) {
-    console.error("Error in disliking article:", error);
-    throw {
-      message: error.response?.data?.message || "Failed to dislike article",
-      code: error.response?.data?.code || "SERVER_ERROR",
-    };
-  }
-};
 
 

@@ -87,10 +87,10 @@ export default class BaseRepository<T extends Document>
     }
   }
 
-  async update(id: string, data: UpdateQuery<T>): Promise<T | null> {
+  async update(filter: FilterQuery<T>, data: UpdateQuery<T>): Promise<T | null> {
     try {
       return await this._model
-        .findByIdAndUpdate(id, data, { new: true })
+        .findOneAndUpdate(filter, data, { new: true })
         .exec();
     } catch (error) {
       console.log("Error updating document:", error);

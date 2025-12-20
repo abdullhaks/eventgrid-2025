@@ -5,6 +5,7 @@ import { Container } from "inversify";
 import User from "../models/user";
 import Admin from "../models/admin";
 import PhotoAndVidoe from "../models/photoAndVideo";
+import Otp from "../models/otp";
 
 //controllers
 
@@ -49,6 +50,10 @@ import AdminRepository from "../repositories/implementations/adminRepository";
 import IPhotoAndVideoRepository from "../repositories/interfaces/IPhotoAndVideoRepository";
 import PhotoAndVideoRepository from "../repositories/implementations/photoAndVideoRepository";
 
+import OtpRepository from "../repositories/implementations/otpRepository";
+import IOtpRepository from "../repositories/interfaces/IOtpRepository";
+
+
 
 //-------------------------------------------------------------------------------
 const container = new Container();
@@ -60,6 +65,7 @@ const container = new Container();
 container.bind("userModel").toConstantValue(User);
 container.bind('adminModel').toConstantValue(Admin);
 container.bind('photoAndvidoeModle').toConstantValue(PhotoAndVidoe);
+container.bind('otpModel').toConstantValue(Otp);
 
 
 //repository binding
@@ -67,6 +73,9 @@ container.bind('photoAndvidoeModle').toConstantValue(PhotoAndVidoe);
 container.bind<IUserRepository>("IUserRepository").to(UserRepository);
 container.bind<IAdminRepository>("IAdminRepository").to(AdminRepository)
 container.bind<IPhotoAndVideoRepository>("IPhotoAndVideoRepository").to(PhotoAndVideoRepository);
+container.bind<IOtpRepository>('IOtpRepository').to(OtpRepository);
+
+
 
 //service binding
 

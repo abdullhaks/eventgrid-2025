@@ -9,6 +9,7 @@ export interface IUserDocument extends Document {
     email: string,
     password: string,
     profile: string,
+    isValidated:boolean
     createdAt: Date;
     updatedAt: Date;
     

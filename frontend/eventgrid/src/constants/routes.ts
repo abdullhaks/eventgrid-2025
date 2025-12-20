@@ -4,6 +4,7 @@
 export const ROUTES = {
   user: {
     signup: "/user/signup",
+    verifyOtp:"/user/verifyOtp",
     login: "/user/login",
     accessToken: "/user/accessToken",
     logout: "/user/logout",

@@ -9,6 +9,11 @@ export interface userSignupRequestDto {
 };
 
 
+export interface otpVerifyRequestDto {
+  email: string;
+  otp: string;
+} 
+
 export interface userLoginRequestDto{
     emailOrPhone:string;
     password:string;

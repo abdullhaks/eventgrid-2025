@@ -9,6 +9,7 @@ import UserPrivateRoute from "../../routes/user/privateRoutes";
 
 import Auth from "../../pages/user/Auth";
 import { SearchConsole } from "../../pages/user/SearchConsole";
+import { Otp } from "../../pages/user/otp";
 
 const UserRoutes = () => {
   return (
@@ -18,6 +19,7 @@ const UserRoutes = () => {
         <Route path="/start" element={<Auth />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/otp" element={<Otp/>} />
       </Route>
       <Route element={<UserPrivateRoute />}>
         <Route path="/home" element={<Home />} />

@@ -52,7 +52,7 @@ async updateProfileImageService(userId: string, profile: IProfile | undefined): 
             if(profileUrl){
 
             
-            const updatedData = await this._userRepository.update(userId,{ profile: profileUrl })
+            const updatedData = await this._userRepository.update({_id:userId},{ profile: profileUrl })
             if (!updatedData) {
                 throw {
                     status: HttpStatusCode.NOT_FOUND,
@@ -94,7 +94,7 @@ async updateProfileService(profileData: IProfileData): Promise<any> {
 
     
 
-    const updatedData = await this._userRepository.update(userId,{
+    const updatedData = await this._userRepository.update({_id:userId},{
             firstName,
             lastName,
             email,

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Login } from "./Login"; 
 import { Signup } from "./Signup";
 import eg_logo from '/eg-logo3.png'
+import { Otp } from "./otp";
 
 
 
@@ -79,6 +80,17 @@ function Auth() {
                   className="w-full"
                 >
                   <Login onNavigate={setView} />
+                </motion.div>
+             ) : view === 'otp' ? (
+                <motion.div 
+                  key="otp"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                  className="w-full"
+                >
+                  <Otp onNavigate={setView} />
                 </motion.div>
              ) : (
                 <motion.div 

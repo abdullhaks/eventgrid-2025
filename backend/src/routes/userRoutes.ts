@@ -12,8 +12,10 @@ const profileController = container.get<IProfileController>("IProfileController"
 
 
 userRouter.post('/signup',(req,res)=>authController.signup(req,res));
+userRouter.post('/verifyOtp',(req,res)=> authController.verifyOtp(req,res));
 userRouter.post("/login", (req, res) => authController.login(req, res));
 userRouter.get('/accessToken',(req,res)=>authController.accessToken(req,res));
+
 
 
 userRouter.put('/updateProfileImage',verifyAccessTokenMidleware("user"),upload.fields([

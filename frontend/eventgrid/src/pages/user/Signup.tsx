@@ -141,11 +141,15 @@ export const Signup = ({ onNavigate }:any) => {
 
       const response = await signupUser(formData);
       if (response) {
-        dispatch(logoutUser());
-        dispatch(loginUser({ user: response }));
-        message.success("Signed up successfully");
-        navigate("/user/home");
-        setTimeout(() => message.success("Welcome to Eventgrid"), 500);
+        // dispatch(logoutUser());
+        // dispatch(loginUser({ user: response }));
+
+        console.log('sighup repsonse is ',response)
+        localStorage.setItem("eventgrid_email",response.email);
+        message.success("Signed up successfully, please verify your email");
+        // navigate("/user/otp");
+        onNavigate('otp')
+        // setTimeout(() => message.success("Welcome to Eventgrid"), 500);
       }
     } catch (error:any) {
       console.error("Signup error:", error);
