@@ -1,18 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-// import { GridBackground } from "../components/gridBackground";
 import { FormInput } from "../../components/FormInput";
-// import thinkletLogo from "../assets/thinklet.png";
 import { verifyOtp } from "../../services/apis/userApi";
-// import { useDispatch } from "react-redux";
-// import { loginUser as welcome } from "../../redux/slices/userSlice";
 import { message } from "antd";
-import { ArrowRight, Eye, EyeOff, Loader2, Mail } from "lucide-react";
+import { ArrowRight,Loader2,  } from "lucide-react";
 
 
 export const Otp = ({ onNavigate }:any) => {
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const email = localStorage.getItem("eventgrid_email")
 
@@ -25,7 +19,7 @@ export const Otp = ({ onNavigate }:any) => {
     otp: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
+
 
   const validateField = (name: string, value: string) => {
     const newErrors = { ...errors };
