@@ -25,15 +25,6 @@ export const logoutAdmin = async () => {
 };
 
 
-export const getPhotoandVideoServices = async () => {
-  try {
-    const response = await adminInstance.get(ROUTES.admin.photoAndVideoServices);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching photo and video services:", error);
-    throw error;
-  } 
-};
 
 export const updatePhotoAndVideoServiceStatus = async (serviceId: string, status: number) => {
   try {
@@ -53,6 +44,7 @@ export const deletePhotoAndVideoService = async (serviceId: string) => {
     throw error;
   }
 };
+
 export const addPhotoAndVideoService = async (serviceData: any) => {
   try {
     const response = await adminInstance.post(ROUTES.admin.photoAndVideoServices, serviceData); 
@@ -61,5 +53,14 @@ export const addPhotoAndVideoService = async (serviceData: any) => {
     console.error("Error adding photo and video service:", error);
     throw error;
   }
+};
 
+export const getPhotoAndVideoService = async (page: number, limit: number) => {
+  try {
+    const response = await adminInstance.get(`${ROUTES.admin.photoAndVideoServices}?page=${page}&limit=${limit}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching photo and video services:", error);
+    throw error;
+  }
 };

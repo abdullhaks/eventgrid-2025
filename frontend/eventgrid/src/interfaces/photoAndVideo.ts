@@ -1,12 +1,13 @@
 export interface IPhotoAndVideoDocument {
 
     _id: string | number;
-    serviceBy: string,
-    provider: string,
+    serviceName: string,
+    providerName: string,
     location: string,
-    services:string,
+    description:string,
     contact:string,
-    price: string,
+    price: number,
+    bookingPrice: number,
     status: number,
     referLink:string,
     coverImage:string,

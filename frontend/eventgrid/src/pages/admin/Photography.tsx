@@ -5,50 +5,29 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type IPhotoAndVideoDocument } from '../../interfaces/photoAndVideo';
 import GeoapifyAutocomplete from '../../components/GeoapifyAutocomplete';
+import { addPhotoAndVideoService, getPhotoAndVideoService } from '../../services/apis/adminApi';
 
 const formSchema = z.object({
-  serviceBy: z.string().min(3, 'Service name must be at least 3 characters').max(100),
-  provider: z.string().min(2, 'Provider name must be at least 2 characters').max(100),
+  serviceName: z.string().min(3, 'Service name must be at least 3 characters').max(100),
+  providerName: z.string().min(2, 'Provider name must be at least 2 characters').max(100),
   location: z.object({
     type: z.literal('Point'),
     coordinates: z.tuple([z.number(), z.number()]),
     text: z.string().min(1, 'Location is required'),
   }),
-  services: z.string().min(10, 'Services description must be at least 10 characters'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
   contact: z.string().regex(/^[\w.-]+@[\w.-]+\.\w+$|^\+?\d[\d\s-]{10,}$/, 'Valid email or phone required'),
   price: z.number().positive('Price must be greater than 0'),
-  status: z.number().int().min(1).max(3),
+  bookingPrice: z.number().positive('Booking price must be greater than 0'),
+  status: z.number().int().min(1).max(2),
   referLink: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  coverImageFile: z.any()
+  coverImage: z.any()
     .refine((files: FileList | undefined) => files && files.length === 1, 'Cover image is required')
     .refine((files: FileList | undefined) => files && files[0]?.type.startsWith('image/'), 'Must be an image')
-    .refine((files: FileList | undefined) => files && files[0]?.size <= 5 * 1024 * 1024, 'Max 5MB'),
-  galleryFiles: z.any()
-    .refine((files: FileList | undefined) => !files || files.length <= 10, 'Maximum 10 gallery images')
-    .refine((files: FileList | undefined) => !files || [...files].every(f => f.type.startsWith('image/')), 'All files must be images')
-    .optional(),
+    .refine((files: FileList | undefined) => files && files[0]?.size <= 20 * 1024 * 1024, 'Max 5MB'),
 });
 
 type FormData = z.infer<typeof formSchema>;
-
-const initialData: IPhotoAndVideoDocument[] = [
-  // ... (your initial data unchanged)
-  {
-    _id: 1,
-    serviceBy: "Golden Hour Studios",
-    provider: "John Doe",
-    location: "Thiruvananthapuram",
-    services: "Wedding photography, videography, drone shots",
-    contact: "john@example.com / +1-123-456-7890",
-    price: "$1500/day",
-    status: 1,
-    referLink: "https://goldenhour.com",
-    coverImage: "https://crystallinestudio.com/image_gallery_big/Crystalline-photography-1794.jpg",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  // ... other entries unchanged
-];
 
 const LIMIT = 5;
 
@@ -56,9 +35,8 @@ const getStatusBadge = (status: number) => {
   const styles: { [key: number]: string } = {
     1: 'bg-green-100 text-green-800',
     2: 'bg-amber-100 text-amber-800',
-    3: 'bg-red-100 text-red-800',
   };
-  const labels: { [key: number]: string } = { 1: 'Active', 2: 'Busy', 3: 'Booked' };
+  const labels: { [key: number]: string } = { 1: 'Active', 2: 'Non-Active' };
   return <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${styles[status] || 'bg-gray-100 text-gray-800'}`}>{labels[status] || 'Unknown'}</span>;
 };
 
@@ -76,16 +54,15 @@ const AddModal = ({
     defaultValues: {
       status: 1,
       price: undefined,
+      bookingPrice: undefined,
     }
   });
 
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [location, setLocation] = useState<{ type: 'Point'; coordinates: [number, number]; text: string } | null>(null);
 
-  const coverFile = watch('coverImageFile');
-  const galleryFiles = watch('galleryFiles');
+  const coverFile = watch('coverImage');
   const coverPreview = coverFile && coverFile[0] ? URL.createObjectURL(coverFile[0]) : null;
-  const galleryPreviews = galleryFiles ? Array.from(galleryFiles).map((f:any) => URL.createObjectURL(f)) : [];
 
   const onFormSubmit = async (data: FormData) => {
     setSubmitError(null);
@@ -130,14 +107,14 @@ const AddModal = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Service Name *</label>
-              <input {...register('serviceBy')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              {errors.serviceBy && <p className="mt-1 text-xs text-red-600">{errors.serviceBy.message}</p>}
+              <input {...register('serviceName')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              {errors.serviceName && <p className="mt-1 text-xs text-red-600">{errors.serviceName.message}</p>}
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Provider Name *</label>
-              <input {...register('provider')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              {errors.provider && <p className="mt-1 text-xs text-red-600">{errors.provider.message}</p>}
+              <input {...register('providerName')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              {errors.providerName && <p className="mt-1 text-xs text-red-600">{errors.providerName.message}</p>}
             </div>
 
             <div className="md:col-span-2">
@@ -158,25 +135,37 @@ const AddModal = ({
               <input 
                 type="number" 
                 {...register('price', { valueAsNumber: true })} 
-                placeholder="1500"
+                placeholder="15000"
+                min={1}
                 className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
               />
               {errors.price && <p className="mt-1 text-xs text-red-600">{errors.price.message}</p>}
             </div>
 
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Booking Price *</label>
+              <input 
+                type="number" 
+                {...register('bookingPrice', { valueAsNumber: true })} 
+                placeholder="2000"
+                min={1}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
+              />
+              {errors.bookingPrice && <p className="mt-1 text-xs text-red-600">{errors.bookingPrice.message}</p>}
+            </div>
+
+            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Status *</label>
               <select {...register('status', { valueAsNumber: true })} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value={1}>Active</option>
-                <option value={2}>Busy</option>
-                <option value={3}>Booked</option>
+                <option value={2}>Non-Active</option>
               </select>
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Services Offered *</label>
-              <textarea {...register('services')} rows={3} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
-              {errors.services && <p className="mt-1 text-xs text-red-600">{errors.services.message}</p>}
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+              <textarea {...register('description')} rows={3} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
+              {errors.description && <p className="mt-1 text-xs text-red-600">{errors.description.message}</p>}
             </div>
 
             <div>
@@ -196,31 +185,12 @@ const AddModal = ({
               <input 
                 type="file" 
                 accept="image/*" 
-                {...register('coverImageFile')} 
+                {...register('coverImage')} 
                 className="w-full text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
               />
-              {errors.coverImageFile && <p className="mt-1 text-xs text-red-600">{(errors.coverImageFile as any)?.message}</p>}
+              {errors.coverImage && <p className="mt-1 text-xs text-red-600">{(errors.coverImage as any)?.message}</p>}
               {coverPreview && (
                 <img src={coverPreview} alt="Cover preview" className="mt-3 w-full max-h-64 object-cover rounded-lg shadow" />
-              )}
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Gallery Images (Optional, up to 10)</label>
-              <input 
-                type="file" 
-                accept="image/*" 
-                multiple 
-                {...register('galleryFiles')} 
-                className="w-full text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-              />
-              {errors.galleryFiles && <p className="mt-1 text-xs text-red-600">{(errors.galleryFiles as any)?.message}</p>}
-              {galleryPreviews.length > 0 && (
-                <div className="grid grid-cols-5 gap-2 mt-3">
-                  {galleryPreviews.map((src, i) => (
-                    <img key={i} src={src} alt={`Gallery ${i+1}`} className="h-24 object-cover rounded-lg shadow" />
-                  ))}
-                </div>
               )}
             </div>
           </div>
@@ -241,44 +211,46 @@ const AddModal = ({
 };
 
 const Photography = () => {
-  const [allServices, setAllServices] = useState<IPhotoAndVideoDocument[]>(initialData);
   const [services, setServices] = useState<IPhotoAndVideoDocument[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
 
   const fetchData = async () => {
-    const start = (currentPage - 1) * LIMIT;
-    const paginated = allServices.slice(start, start + LIMIT);
-    setServices(paginated);
-    setTotalPages(Math.ceil(allServices.length / LIMIT));
+    try {
+      const res = await getPhotoAndVideoService(currentPage, LIMIT);
+      setServices(res.services);
+      setTotalPages(res.totalPages);
+    } catch (error) {
+      console.error('Error fetching services:', error);
+    }
   };
 
   const handleAdd = async (formData: FormData) => {
-    const coverUrl = URL.createObjectURL(formData.coverImageFile[0]);
-    const maxId = Math.max(...allServices.map(s => s._id as number), 0);
+    const payload = new FormData();
+    payload.append('serviceName', formData.serviceName);
+    payload.append('providerName', formData.providerName);
+    payload.append('location', JSON.stringify(formData.location));
+    payload.append('description', formData.description);
+    payload.append('contact', formData.contact);
+    payload.append('price', formData.price.toString());
+    payload.append('bookingPrice', formData.bookingPrice.toString());
+    payload.append('status', formData.status.toString());
+    if (formData.referLink) payload.append('referLink', formData.referLink);
+    payload.append('coverImage', formData.coverImage[0]);
 
-    const newService: IPhotoAndVideoDocument = {
-      _id: maxId + 1,
-      serviceBy: formData.serviceBy,
-      provider: formData.provider,
-      location: formData.location.text,
-      services: formData.services,
-      contact: formData.contact,
-      price: `$${formData.price}/day`,
-      status: formData.status,
-      referLink: formData.referLink || '',
-      coverImage: coverUrl,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-
-    setAllServices(prev => [...prev, newService]);
+    try {
+      const response = await addPhotoAndVideoService(payload);
+      await fetchData();
+      return response;
+    } catch (error) {
+      throw error;
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, allServices.length]);
+  }, [currentPage]);
 
   return (
     <div className="space-y-6">
@@ -321,8 +293,8 @@ const Photography = () => {
             <tbody className="divide-y divide-gray-100">
               {services.map((s) => (
                 <tr key={s._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium text-gray-900">{s.serviceBy}</td>
-                  <td className="px-6 py-4 text-gray-600">{s.provider}</td>
+                  <td className="px-6 py-4 font-medium text-gray-900">{s.serviceName}</td>
+                  <td className="px-6 py-4 text-gray-600">{s.providerName}</td>
                   <td className="px-6 py-4 text-gray-500 flex items-center gap-1"><MapPin size={14} /> {s.location}</td>
                   <td className="px-6 py-4 font-medium">{s.price}</td>
                   <td className="px-6 py-4">{getStatusBadge(s.status)}</td>
@@ -339,8 +311,8 @@ const Photography = () => {
               <div key={s._id} className="p-4 space-y-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-semibold text-gray-900">{s.serviceBy}</h4>
-                    <p className="text-sm text-gray-600">{s.provider}</p>
+                    <h4 className="font-semibold text-gray-900">{s.serviceName}</h4>
+                    <p className="text-sm text-gray-600">{s.providerName}</p>
                   </div>
                   {getStatusBadge(s.status)}
                 </div>

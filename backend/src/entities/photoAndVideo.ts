@@ -4,17 +4,19 @@ import { Document, Types } from "mongoose";
 export interface IPhotoAndVideoDocument extends Document {
 
     _id: Types.ObjectId;
-    serviceBy: string,
-    provider: string,
-    location: string,
-    services:string,
-    contact:string,
-    price: string,
-    status: number,
-    referLink:string,
-    coverImage:string,
+    serviceName: string;
+    providerName: string;
+    location: string;
+    price : number;
+    bookingPrice : number;
+    status: number;
+    description: string;
+    contact : string;
+    referLink: string;
+    coverImage: string;
+    // galleryImages:string[];
     createdAt: Date;
-    updatedAt: Date;
+    uploadedAt: Date;
     
 }
 export interface photoAndVideoDocument extends IPhotoAndVideoDocument {}

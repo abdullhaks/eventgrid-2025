@@ -2,5 +2,6 @@
 
 
 export default interface IAdminPhotoAndvideoService {
-    getPhotoAndVideoServices(): Promise<any>;
+    getPhotoAndVideoServices(page:number, limit:number): Promise<any>;
+    createPhotoAndVideoServicesServc(serviceData:any) : Promise<any>
 }

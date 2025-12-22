@@ -3,18 +3,108 @@ import { HttpStatusCode } from '../../../utils/enum';
 import { inject, injectable } from 'inversify';
 import IAdminPhotoAndvideoController from '../../interfaces/admin/IAdminPhotoAndVideoController';
 import IAdminPhotoAndvideoService from '../../../services/interfaces/admin/IAdminPhotoAndvideoService';
+import { directUpload } from '../../../utils/S3Helpers';
+
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  buffer: Buffer;
+}
+
+type MulterFiles = {
+  [fieldname: string]: MulterFile[];
+};
+
 
 @injectable()
 export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideoController {
     constructor(
         @inject("IAdminPhotoAndvideoService") private _adminPhotoAndvideoService: IAdminPhotoAndvideoService
     ) {}
-     async getPhotoAndVideoServices(req: Request, res: Response): Promise<void> {
-        try {
-            const services = await this._adminPhotoAndvideoService.getPhotoAndVideoServices();
-            res.status(HttpStatusCode.OK).json({ services });
-        } catch (error) {
-            res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Error retrieving services', error });
-        }
+
+  async getPhotoAndVideoServices(req: Request, res: Response): Promise<void> {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 5;
+      const { services, total } = await this._adminPhotoAndvideoService.getPhotoAndVideoServices(page, limit);
+      const totalPages = Math.ceil(total / limit);
+      res.status(HttpStatusCode.OK).json({ services, totalPages });
+    } catch (error) {
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Error retrieving services', error });
     }
+  };
+
+  async createPhotoAndVideoServicesCtrl (req: Request , res:Response) : Promise <void> {
+    try {
+      const { serviceName, providerName, location, description, contact, price, bookingPrice, status, referLink } = req.body;
+
+      // Backend validation
+      if (!serviceName || serviceName.length < 3 || serviceName.length > 100) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid service name' });
+      }
+      if (!providerName || providerName.length < 2 || providerName.length > 100) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid provider name' });
+      }
+      let locObj;
+      try {
+        locObj = JSON.parse(location);
+        if (locObj.type !== 'Point' || !Array.isArray(locObj.coordinates) || locObj.coordinates.length !== 2 || typeof locObj.text !== 'string' || locObj.text.length < 1) {
+          throw new Error();
+        }
+      } catch {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid location format' });
+      }
+      if (!description || description.length < 10) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid description' });
+      }
+      const contactRegex = /^[\w.-]+@[\w.-]+\.\w+$|^\+?\d[\d\s-]{10,}$/;
+      if (!contact || !contactRegex.test(contact)) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid contact' });
+      }
+      const priceNum = parseFloat(price);
+      if (isNaN(priceNum) || priceNum <= 0) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid price' });
+      }
+      const bookingPriceNum = parseFloat(bookingPrice);
+      if (isNaN(bookingPriceNum) || bookingPriceNum <= 0) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid booking price' });
+      }
+      const statusNum = parseInt(status);
+      if (![1, 2].includes(statusNum)) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid status' });
+      }
+      if (referLink && !/^https?:\/\/.+/i.test(referLink)) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid referLink' });
+      }
+      if (!req.file) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Cover image is required' });
+      }
+
+      // Prepare data for service
+      const serviceData = {
+        serviceName,
+        providerName,
+        location: locObj.text, // Save text as string, adjust if GeoJSON needed in DB
+        description,
+        contact,
+        price: priceNum,
+        bookingPrice: bookingPriceNum,
+        status: statusNum,
+        referLink: referLink || '',
+        coverImage: req.file, // Pass the file object
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const createdService = await this._adminPhotoAndvideoService.createPhotoAndVideoServicesServc(serviceData);
+      res.status(HttpStatusCode.CREATED).json(createdService);
+    } catch (error) {
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Error creating service', error });
+    }
+  }
+
+  
 }

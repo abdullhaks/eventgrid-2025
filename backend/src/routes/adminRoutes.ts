@@ -1,6 +1,7 @@
 import express from "express"
 import { verifyAccessTokenMidleware } from "../middlewares.ts/checkAccessToken";
 import container from "../config/inversify";
+import { upload } from "../utils/S3Helpers";
 
 
 import IAdminAuthController from "../controllers/interfaces/admin/IAdminAuthController";
@@ -17,9 +18,8 @@ adminRouter.post("/login",(req,res)=> adminAuthCtrl.login(req,res));
 adminRouter.post('/logout',(req,res)=>adminAuthCtrl.logout(req,res));
 adminRouter.post('/accessToken',(req,res)=>adminAuthCtrl.accessToken(req,res));
 
-adminRouter.get('/photoAndVideoServices',(req,res)=>photoAndVideoCtrl.getPhotoAndVideoServices(req,res));
-
-
+adminRouter.get('/photoAndVideoServices', (req, res) => photoAndVideoCtrl.getPhotoAndVideoServices(req, res));
+adminRouter.post('/photoAndVideoServices', upload.single('coverImage'), (req, res) => photoAndVideoCtrl.createPhotoAndVideoServicesCtrl(req, res));
 
 
 
