@@ -1,6 +1,6 @@
 export interface IPhotoAndVideoDocument {
 
-    _id: string | number;
+    _id: string ;
     serviceName: string,
     providerName: string,
     location: string,

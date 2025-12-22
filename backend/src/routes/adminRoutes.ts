@@ -20,8 +20,8 @@ adminRouter.post('/accessToken',(req,res)=>adminAuthCtrl.accessToken(req,res));
 
 adminRouter.get('/photoAndVideoServices', (req, res) => photoAndVideoCtrl.getPhotoAndVideoServices(req, res));
 adminRouter.post('/photoAndVideoServices', upload.single('coverImage'), (req, res) => photoAndVideoCtrl.createPhotoAndVideoServicesCtrl(req, res));
-
-
+adminRouter.get('/photoAndVideoServices/:id', (req, res) => photoAndVideoCtrl.getPhotoAndVideoServiceById(req, res));
+adminRouter.put('/photoAndVideoServices/:id', upload.single('coverImage'), (req, res) => photoAndVideoCtrl.updatePhotoAndVideoService(req, res));
 
 
 

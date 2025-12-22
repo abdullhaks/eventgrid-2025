@@ -104,6 +104,93 @@ export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideo
     } catch (error) {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Error creating service', error });
     }
+  };
+
+
+
+  async getPhotoAndVideoServiceById(req: Request, res: Response): Promise<void> {
+    try {
+      const service = await this._adminPhotoAndvideoService.getById(req.params.id);
+      if (!service) {
+         res.status(HttpStatusCode.NOT_FOUND).json({ message: 'Service not found' });
+      }
+      res.status(HttpStatusCode.OK).json(service);
+    } catch (error) {
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Error retrieving service', error });
+    }
+  };
+
+  async updatePhotoAndVideoService(req: Request, res: Response): Promise<void> {
+    try {
+      const id = req.params.id;
+      const existing = await this._adminPhotoAndvideoService.getById(id);
+      if (!existing) {
+         res.status(HttpStatusCode.NOT_FOUND).json({ message: 'Service not found' });
+      }
+
+      const { serviceName,providerName,location,description,contact,price,bookingPrice,status,referLink } = req.body;
+
+      // Validation similar to create
+      if (!serviceName || serviceName.length < 3 || serviceName.length > 100) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid service Name' });
+      }
+      if (!providerName || providerName.length < 2 || providerName.length > 100) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid provider Name' });
+      }
+      let locObj;
+      try {
+        locObj = JSON.parse(location);
+        if (locObj.type !== 'Point' || !Array.isArray(locObj.coordinates) || locObj.coordinates.length !== 2 || typeof locObj.text !== 'string' || locObj.text.length < 1) {
+          throw new Error();
+        }
+      } catch {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid location format' });
+      }
+      if (!description || description.length < 10) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid services description' });
+      }
+      const contactRegex = /^[\w.-]+@[\w.-]+\.\w+$|^\+?\d[\d\s-]{10,}$/;
+      if (!contact || !contactRegex.test(contact)) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid contact' });
+      }
+      const priceNum = parseFloat(price);
+      if (isNaN(priceNum) || priceNum <= 0) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid price' });
+      }
+
+       const bookingPriceNum = parseFloat(bookingPrice);
+      if (isNaN(bookingPriceNum) || bookingPriceNum <= 0) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid price' });
+      }
+
+      const statusNum = parseInt(status);
+      if (![1, 2].includes(statusNum)) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid status' });
+      }
+      if (referLink && !/^https?:\/\/.+/i.test(referLink)) {
+         res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid referLink' });
+      }
+
+      // Prepare data for service
+      const serviceData = {
+        serviceName,
+        providerName,
+        location: locObj.text,
+        description,
+        contact,
+        price: priceNum,
+        bookingPrice: bookingPriceNum,
+        status: statusNum,
+        referLink: referLink || '',
+        coverImage: req.file ? req.file : null, // If no new file, null, service will keep old
+        updatedAt: new Date(),
+      };
+
+      const updatedService = await this._adminPhotoAndvideoService.updatePhotoAndVideoService(id, serviceData);
+      res.status(HttpStatusCode.OK).json(updatedService);
+    } catch (error) {
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Error updating service', error });
+    }
   }
 
   
