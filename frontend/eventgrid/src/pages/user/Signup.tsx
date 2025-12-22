@@ -4,13 +4,10 @@ import { motion } from 'framer-motion';
 import { message } from "antd";
 import { FormInput } from "../../components/FormInput";
 import { signupUser } from "../../services/apis/userApi";
-import { useDispatch } from "react-redux";
-import { loginUser, logoutUser } from "../../redux/slices/userSlice";
 import { ChevronLeft, User, Mail, Phone, EyeOff, Eye, Loader2 } from "lucide-react";
 
 export const Signup = ({ onNavigate }:any) => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

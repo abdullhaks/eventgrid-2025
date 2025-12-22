@@ -9,7 +9,7 @@ import UserPrivateRoute from "../../routes/user/privateRoutes";
 
 import Auth from "../../pages/user/Auth";
 import { SearchConsole } from "../../pages/user/SearchConsole";
-import { Otp } from "../../pages/user/otp";
+import { Otp } from "../../pages/user/Otp"; 
 
 const UserRoutes = () => {
   return (

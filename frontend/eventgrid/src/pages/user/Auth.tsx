@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Login } from "./Login"; 
 import { Signup } from "./Signup";
 import eg_logo from '/eg-logo3.png'
-import { Otp } from "./otp";
+import { Otp } from "./Otp"; 
 
 
 
