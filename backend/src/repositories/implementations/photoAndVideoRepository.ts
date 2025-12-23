@@ -8,7 +8,7 @@ import IPhotoAndVideoRepository from "../interfaces/IPhotoAndVideoRepository";
 @injectable()
 export default class PhotoAndVideoRepository extends BaseRepository<photoAndVideoDocument> implements IPhotoAndVideoRepository {
 
-    constructor(@inject("photoAndvidoeModle") _photoAndvidoeModle : Model<photoAndVideoDocument>){
+    constructor(@inject("photoAndvidoeModel") _photoAndvidoeModle : Model<photoAndVideoDocument>){
         super(_photoAndvidoeModle)
     };
 

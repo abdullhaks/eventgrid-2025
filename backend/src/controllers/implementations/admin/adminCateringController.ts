@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { HttpStatusCode } from '../../../utils/enum';
 import { inject, injectable } from 'inversify';
-import IAdminPhotoAndvideoController from '../../interfaces/admin/IAdminPhotoAndVideoController';
-import IAdminPhotoAndvideoService from '../../../services/interfaces/admin/IAdminPhotoAndvideoService';
-import { directUpload } from '../../../utils/S3Helpers';
+import IAdminCateringController from '../../interfaces/admin/IAdminCateringController'; 
+import IAdminCateringService from '../../../services/interfaces/admin/IAdminCateringService';
+
 
 interface MulterFile {
   fieldname: string;
@@ -20,16 +20,16 @@ type MulterFiles = {
 
 
 @injectable()
-export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideoController {
+export default class AdminCateringController implements IAdminCateringController {
     constructor(
-        @inject("IAdminPhotoAndvideoService") private _adminPhotoAndvideoService: IAdminPhotoAndvideoService
+        @inject("IAdminCateringService") private _adminCateringService: IAdminCateringService
     ) {}
 
-  async getPhotoAndVideoServices(req: Request, res: Response): Promise<void> {
+  async getCateringServices(req: Request, res: Response): Promise<void> {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 5;
-      const { services, total } = await this._adminPhotoAndvideoService.getPhotoAndVideoServices(page, limit);
+      const { services, total } = await this._adminCateringService.getCateringServices(page, limit);
       const totalPages = Math.ceil(total / limit);
       res.status(HttpStatusCode.OK).json({ services, totalPages });
     } catch (error) {
@@ -37,15 +37,15 @@ export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideo
     }
   };
 
-  async createPhotoAndVideoServicesCtrl (req: Request , res:Response) : Promise <void> {
+  async createCateringServicesCtrl (req: Request , res:Response) : Promise <void> {
     try {
-      const { serviceName, providerName, location, description, contact, price, bookingPrice, status, referLink } = req.body;
+      const { serviceName, chiefChef, location, description, contact, price, bookingPrice, status, referLink } = req.body;
 
       // Backend validation
       if (!serviceName || serviceName.length < 3 || serviceName.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid service name' });
       }
-      if (!providerName || providerName.length < 2 || providerName.length > 100) {
+      if (!chiefChef || chiefChef.length < 2 || chiefChef.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid provider name' });
       }
       let locObj;
@@ -86,7 +86,7 @@ export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideo
       // Prepare data for service
       const serviceData = {
         serviceName,
-        providerName,
+        chiefChef,
         location: locObj.text, // Save text as string, adjust if GeoJSON needed in DB
         description,
         contact,
@@ -99,7 +99,7 @@ export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideo
         updatedAt: new Date(),
       };
 
-      const createdService = await this._adminPhotoAndvideoService.createPhotoAndVideoServicesServc(serviceData);
+      const createdService = await this._adminCateringService.createCateringServicesServc(serviceData);
       res.status(HttpStatusCode.CREATED).json(createdService);
     } catch (error) {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Error creating service', error });
@@ -108,9 +108,9 @@ export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideo
 
 
 
-  async getPhotoAndVideoServiceById(req: Request, res: Response): Promise<void> {
+  async getCateringServiceById(req: Request, res: Response): Promise<void> {
     try {
-      const service = await this._adminPhotoAndvideoService.getById(req.params.id);
+      const service = await this._adminCateringService.getById(req.params.id);
       if (!service) {
          res.status(HttpStatusCode.NOT_FOUND).json({ message: 'Service not found' });
       }
@@ -120,21 +120,21 @@ export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideo
     }
   };
 
-  async updatePhotoAndVideoService(req: Request, res: Response): Promise<void> {
+  async updateCateringService(req: Request, res: Response): Promise<void> {
     try {
       const id = req.params.id;
-      const existing = await this._adminPhotoAndvideoService.getById(id);
+      const existing = await this._adminCateringService.getById(id);
       if (!existing) {
          res.status(HttpStatusCode.NOT_FOUND).json({ message: 'Service not found' });
       }
 
-      const { serviceName,providerName,location,description,contact,price,bookingPrice,status,referLink } = req.body;
+      const { serviceName,chiefChef,location,description,contact,price,bookingPrice,status,referLink } = req.body;
 
       // Validation similar to create
       if (!serviceName || serviceName.length < 3 || serviceName.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid service Name' });
       }
-      if (!providerName || providerName.length < 2 || providerName.length > 100) {
+      if (!chiefChef || chiefChef.length < 2 || chiefChef.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid provider Name' });
       }
       let locObj;
@@ -174,7 +174,7 @@ export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideo
       // Prepare data for service
       const serviceData = {
         serviceName,
-        providerName,
+        chiefChef,
         location: locObj.text,
         description,
         contact,
@@ -186,7 +186,7 @@ export default class AdminPhotoAndVideoController implements IAdminPhotoAndvideo
         updatedAt: new Date(),
       };
 
-      const updatedService = await this._adminPhotoAndvideoService.updatePhotoAndVideoService(id, serviceData);
+      const updatedService = await this._adminCateringService.updateCateringService(id, serviceData);
       res.status(HttpStatusCode.OK).json(updatedService);
     } catch (error) {
       res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Error updating service', error });

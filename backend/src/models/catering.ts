@@ -1,11 +1,11 @@
 import { Schema,model } from "mongoose";
-import { photoAndVideoDocument } from "../entities/photoAndVideo";
+import { cateringDocument } from "../entities/cateringEntity"; 
+import { isNumberObject } from "util/types";
 
-
-const photoAndVideoSchema:Schema<photoAndVideoDocument> = new Schema ({
+const cateringSchema:Schema<cateringDocument> = new Schema ({
 
     serviceName: {type: String ,required : true },
-    providerName: {type: String ,required : true },
+    chiefChef: {type: String ,required : true },
     location: {type: String ,required : true },
     contact:{type: String ,required : true },
     price: {type: Number ,required : true },
@@ -22,6 +22,6 @@ const photoAndVideoSchema:Schema<photoAndVideoDocument> = new Schema ({
 
 
 
-const PhotoAndVidoe = model<photoAndVideoDocument>('PhotoAndVideo',photoAndVideoSchema);
+const Catering = model<cateringDocument>('Catering',cateringSchema);
 
-export default PhotoAndVidoe;
+export default Catering;

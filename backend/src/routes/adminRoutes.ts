@@ -6,13 +6,14 @@ import { upload } from "../utils/S3Helpers";
 
 import IAdminAuthController from "../controllers/interfaces/admin/IAdminAuthController";
 import IAdminPhotoAndvideoController from "../controllers/interfaces/admin/IAdminPhotoAndVideoController";
+import IAdminCateringController from "../controllers/interfaces/admin/IAdminCateringController"
 
 const adminRouter = express.Router();
 
 
 const adminAuthCtrl = container.get<IAdminAuthController>("IAdminAuthController");
 const photoAndVideoCtrl = container.get<IAdminPhotoAndvideoController>("IAdminPhotoAndvideoController");
-
+const cateringCtrl = container.get<IAdminCateringController>("IAdminCateringController")
 
 adminRouter.post("/login",(req,res)=> adminAuthCtrl.login(req,res));
 adminRouter.post('/logout',(req,res)=>adminAuthCtrl.logout(req,res));
@@ -23,6 +24,10 @@ adminRouter.post('/photoAndVideoServices', upload.single('coverImage'), (req, re
 adminRouter.get('/photoAndVideoServices/:id', (req, res) => photoAndVideoCtrl.getPhotoAndVideoServiceById(req, res));
 adminRouter.put('/photoAndVideoServices/:id', upload.single('coverImage'), (req, res) => photoAndVideoCtrl.updatePhotoAndVideoService(req, res));
 
+adminRouter.get('/cateringServices', (req, res) => cateringCtrl.getCateringServices(req, res));
+adminRouter.post('/cateringServices', upload.single('coverImage'), (req, res) => cateringCtrl.createCateringServicesCtrl(req, res));
+adminRouter.get('/cateringServices/:id', (req, res) => cateringCtrl.getCateringServiceById(req, res));
+adminRouter.put('/cateringServices/:id', upload.single('coverImage'), (req, res) => cateringCtrl.updateCateringService(req, res));
 
 
 export default adminRouter

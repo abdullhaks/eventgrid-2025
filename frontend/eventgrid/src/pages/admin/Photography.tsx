@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Plus, X, Eye, Pencil } from 'lucide-react';
+import { /*Search,*/ MapPin, Plus, X, Eye, Pencil } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -586,7 +586,7 @@ const Photography = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Photography & Videography Services</h2>
-          <p className="text-sm text-gray-500 mt-1">Manage all registered service providers in India</p>
+          <p className="text-sm text-gray-500 mt-1">Manage all photography & videographyservice</p>
         </div>
         <button onClick={() => setModalOpen(true)} className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 shadow-sm">
           <Plus size={18} />
@@ -595,14 +595,14 @@ const Photography = () => {
       </div>
 
       {/* Search & Filter */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+      {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
             <input type="text" placeholder="Search services..." className="w-full pl-10 pr-4 py-2.5 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/30" />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Table/Card View */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
