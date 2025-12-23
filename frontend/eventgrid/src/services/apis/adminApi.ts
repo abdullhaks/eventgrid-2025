@@ -107,3 +107,45 @@ export const updateCateringService = async (id: string, serviceData: any) => {
     throw error;
   }
 };
+
+
+
+export const addVenueService = async (serviceData: any) => {
+  try {
+    const response = await adminInstance.post(ROUTES.admin.venueServices, serviceData); 
+    return response.data;
+  } catch (error) {
+    console.error("Error adding photo and video service:", error);
+    throw error;
+  }
+};
+
+export const getVenueService = async (page: number, limit: number) => {
+  try {
+    const response = await adminInstance.get(`${ROUTES.admin.venueServices}?page=${page}&limit=${limit}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching photo and video services:", error);
+    throw error;
+  }
+};
+
+export const getVenueServiceById = async (id: string) => {
+  try {
+    const response = await adminInstance.get(`${ROUTES.admin.venueServices}/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching photo and video service by id:", error);
+    throw error;
+  }
+};
+
+export const updateVenueService = async (id: string, serviceData: any) => {
+  try {
+    const response = await adminInstance.put(`${ROUTES.admin.venueServices}/${id}`, serviceData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating photo and video service:", error);
+    throw error;
+  }
+};

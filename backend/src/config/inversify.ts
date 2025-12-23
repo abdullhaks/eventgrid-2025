@@ -7,6 +7,7 @@ import Admin from "../models/admin";
 import PhotoAndVidoe from "../models/photoAndVideo";
 import Otp from "../models/otp";
 import Catering from "../models/catering";
+import Venue from "../models/venue";
 //controllers
 
 
@@ -19,12 +20,15 @@ import IProfileController from "../controllers/interfaces/user/IProfileControlle
 
 
 
+
 import AdminAuthController from "../controllers/implementations/admin/adminAuthController";
 import IAdminAuthController from "../controllers/interfaces/admin/IAdminAuthController";
 import IAdminPhotoAndvideoController from "../controllers/interfaces/admin/IAdminPhotoAndVideoController";
-import AdminPhotoAndVideoController from "../controllers/implementations/admin/adminPhotoAndVideoController";
+import AdminPhotoAndVideoController from "../controllers/implementations/admin/photoAndVideoController";
 import AdminCateringController from "../controllers/implementations/admin/adminCateringController";
 import IAdminCateringController from "../controllers/interfaces/admin/IAdminCateringController";
+import AdminVenueController from "../controllers/implementations/admin/AdminVenueController";
+import IAdminVenueController from "../controllers/interfaces/admin/IAdminVenueController";
 
 
 //services
@@ -42,6 +46,9 @@ import AdminPhotoAndvideoService from "../services/implementations/admin/adminPh
 import IAdminPhotoAndvideoService from "../services/interfaces/admin/IAdminPhotoAndvideoService";
 import AdminCateringService from "../services/implementations/admin/adminCateringService";
 import IAdminCateringService from "../services/interfaces/admin/IAdminCateringService";
+import AdminVenueService from "../services/implementations/admin/adminVenueService";
+import IAdminVenueService from "../services/interfaces/admin/IAdminVenueService";
+
 
 
 //repositories
@@ -63,6 +70,10 @@ import CateringRepository from "../repositories/implementations/cateringReposito
 import ICateringRepository from "../repositories/interfaces/ICateringRepository";
 
 
+import VenueRepository from "../repositories/implementations/venueRepository"; 
+import IVenueRepository from "../repositories/interfaces/IVenueRepository";
+
+
 //-------------------------------------------------------------------------------
 const container = new Container();
 //-------------------------------------------------------------------------------
@@ -74,7 +85,8 @@ container.bind("userModel").toConstantValue(User);
 container.bind('adminModel').toConstantValue(Admin);
 container.bind('photoAndvidoeModel').toConstantValue(PhotoAndVidoe);
 container.bind('otpModel').toConstantValue(Otp);
-container.bind('cateringModel').toConstantValue(Catering)
+container.bind('cateringModel').toConstantValue(Catering);
+container.bind('venueModel').toConstantValue(Venue);
 
 
 //repository binding
@@ -84,6 +96,7 @@ container.bind<IAdminRepository>("IAdminRepository").to(AdminRepository)
 container.bind<IPhotoAndVideoRepository>("IPhotoAndVideoRepository").to(PhotoAndVideoRepository);
 container.bind<IOtpRepository>('IOtpRepository').to(OtpRepository);
 container.bind<ICateringRepository>('ICateringRepository').to(CateringRepository);
+container.bind<IVenueRepository>('IVenueRepository').to(VenueRepository);
 
 
 
@@ -95,6 +108,11 @@ container.bind<IProfileService>("IProfileService").to(ProfileService);
 container.bind<IAdminAuthService>("IAdminAuthService").to(AdminAuthService);
 container.bind<IAdminPhotoAndvideoService>("IAdminPhotoAndvideoService").to(AdminPhotoAndvideoService);
 container.bind<IAdminCateringService>('IAdminCateringService').to(AdminCateringService);
+container.bind<IAdminVenueService>('IAdminVenueService').to(AdminVenueService);
+
+
+
+
 
 //controller binding
 container.bind<IAuthController>("IAuthController").to(AuthController);
@@ -103,6 +121,7 @@ container.bind<IProfileController>("IProfileController").to(ProfileController);
 container.bind<IAdminAuthController>("IAdminAuthController").to(AdminAuthController)
 container.bind<IAdminPhotoAndvideoController>("IAdminPhotoAndvideoController").to(AdminPhotoAndVideoController);
 container.bind<IAdminCateringController>('IAdminCateringController').to(AdminCateringController);
+container.bind<IAdminVenueController>('IAdminVenueController').to(AdminVenueController);
 
 
 export default container;

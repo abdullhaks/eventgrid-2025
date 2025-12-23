@@ -27,7 +27,7 @@ export const ROUTES = {
     logout: "/admin/logout",
     photoAndVideoServices: "/admin/photoAndVideoServices",
     cateringServices: "/admin/cateringServices",
-    
+    venueServices: "/admin/venueServices"
   },
   
 };

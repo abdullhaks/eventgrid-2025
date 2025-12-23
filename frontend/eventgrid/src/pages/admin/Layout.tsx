@@ -1,7 +1,7 @@
 // Layout.tsx
 import { useState, useEffect, useRef } from 'react';
 import { LayoutDashboard, Camera, Utensils, HeartHandshake, Music, CreditCard, 
-  RotateCcw, Bell,  Menu, ChevronDown, User, LogOut ,
+  RotateCcw, Bell,  Menu, ChevronDown, User, LogOut ,MapPinHouse ,
 // Search,DollarSign,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,7 @@ import Weddings from './Weddings';
 import MusicEvent from './MusicEvent';
 import Payments from './Payments';
 import CancelledBookings from './CancelledBookings';
+import Venues from './Venues';
 
 const SidebarItem = ({ icon: Icon, label, active, onClick }: { icon: any; label: string; active: boolean; onClick: () => void }) => (
   <button
@@ -57,6 +58,7 @@ const Layout = () => {
       case 'bookings': return <Bookings />;
       case 'photography': return <Photography />;
       case 'catering': return <Catering />;
+      case 'venues': return <Venues />;
       case 'weddings': return <Weddings />;
       case 'music': return <MusicEvent />;
       case 'payments': return <Payments />;
@@ -103,6 +105,7 @@ const Layout = () => {
           <div className="px-3 mt-8 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">Services</div>
           <SidebarItem icon={Camera} label="Photography" active={activeTab === 'photography'} onClick={() => { setActiveTab('photography'); setSidebarOpen(false); }} />
           <SidebarItem icon={Utensils} label="Catering" active={activeTab === 'catering'} onClick={() => { setActiveTab('catering'); setSidebarOpen(false); }} />
+          <SidebarItem icon={MapPinHouse} label="Venues" active={activeTab === 'venues'} onClick={() => { setActiveTab('venues'); setSidebarOpen(false); }} />
           <SidebarItem icon={HeartHandshake} label="Weddings" active={activeTab === 'weddings'} onClick={() => { setActiveTab('weddings'); setSidebarOpen(false); }} />
           <SidebarItem icon={Music} label="Music Events" active={activeTab === 'music'} onClick={() => { setActiveTab('music'); setSidebarOpen(false); }} />
 
