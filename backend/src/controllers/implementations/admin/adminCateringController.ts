@@ -39,13 +39,13 @@ export default class AdminCateringController implements IAdminCateringController
 
   async createCateringServicesCtrl (req: Request , res:Response) : Promise <void> {
     try {
-      const { serviceName, chiefChef, location, description, contact, price, bookingPrice, status, referLink } = req.body;
+      const { serviceName, providerName, location, description, contact, price, bookingPrice, status, referLink } = req.body;
 
       // Backend validation
       if (!serviceName || serviceName.length < 3 || serviceName.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid service name' });
       }
-      if (!chiefChef || chiefChef.length < 2 || chiefChef.length > 100) {
+      if (!providerName || providerName.length < 2 || providerName.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid provider name' });
       }
       let locObj;
@@ -86,7 +86,7 @@ export default class AdminCateringController implements IAdminCateringController
       // Prepare data for service
       const serviceData = {
         serviceName,
-        chiefChef,
+        providerName,
         location: locObj.text, // Save text as string, adjust if GeoJSON needed in DB
         description,
         contact,
@@ -128,13 +128,13 @@ export default class AdminCateringController implements IAdminCateringController
          res.status(HttpStatusCode.NOT_FOUND).json({ message: 'Service not found' });
       }
 
-      const { serviceName,chiefChef,location,description,contact,price,bookingPrice,status,referLink } = req.body;
+      const { serviceName,providerName,location,description,contact,price,bookingPrice,status,referLink } = req.body;
 
       // Validation similar to create
       if (!serviceName || serviceName.length < 3 || serviceName.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid service Name' });
       }
-      if (!chiefChef || chiefChef.length < 2 || chiefChef.length > 100) {
+      if (!providerName || providerName.length < 2 || providerName.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid provider Name' });
       }
       let locObj;
@@ -174,7 +174,7 @@ export default class AdminCateringController implements IAdminCateringController
       // Prepare data for service
       const serviceData = {
         serviceName,
-        chiefChef,
+        providerName,
         location: locObj.text,
         description,
         contact,

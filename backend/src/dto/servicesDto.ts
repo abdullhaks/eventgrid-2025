@@ -1,6 +1,7 @@
-export interface IVenue {
-  propertyName: string;
+export interface IServices {
+  serviceName: string;
   providerName: string;
+  serviceType:string;
   location: string;
   price : number;
   bookingPrice:number;

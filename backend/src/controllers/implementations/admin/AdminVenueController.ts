@@ -3,6 +3,7 @@ import { HttpStatusCode } from '../../../utils/enum';
 import { inject, injectable } from 'inversify';
 import IAdminVenueController from '../../interfaces/admin/IAdminVenueController';
 import IAdminVenueService from '../../../services/interfaces/admin/IAdminVenueService'; 
+import IAdminPhotoAndvideoService from '../../../services/interfaces/admin/IAdminPhotoAndvideoService';
 
 
 interface MulterFile {
@@ -22,7 +23,9 @@ type MulterFiles = {
 @injectable()
 export default class AdminVenueController implements IAdminVenueController {
     constructor(
-        @inject("IAdminVenueService") private _adminVenueService: IAdminVenueService
+      @inject("IAdminVenueService") private _adminVenueService: IAdminVenueService,
+      @inject("IAdminPhotoAndvideoService") private _adminPhotoAndvideoService: IAdminPhotoAndvideoService
+        
     ) {}
 
   async getVenueServices(req: Request, res: Response): Promise<void> {
@@ -39,10 +42,10 @@ export default class AdminVenueController implements IAdminVenueController {
 
   async createVenueServicesCtrl (req: Request , res:Response) : Promise <void> {
     try {
-      const { propertyName, providerName, location, description, contact, price, bookingPrice, status, referLink } = req.body;
+      const { serviceName, providerName, location, description, contact, price, bookingPrice, status, referLink } = req.body;
 
       // Backend validation
-      if (!propertyName || propertyName.length < 3 || propertyName.length > 100) {
+      if (!serviceName || serviceName.length < 3 || serviceName.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid service name' });
       }
       if (!providerName || providerName.length < 2 || providerName.length > 100) {
@@ -85,7 +88,7 @@ export default class AdminVenueController implements IAdminVenueController {
 
       // Prepare data for service
       const serviceData = {
-        propertyName,
+        serviceName,
         providerName,
         location: locObj.text, // Save text as string, adjust if GeoJSON needed in DB
         description,
@@ -128,10 +131,10 @@ export default class AdminVenueController implements IAdminVenueController {
          res.status(HttpStatusCode.NOT_FOUND).json({ message: 'Service not found' });
       }
 
-      const { propertyName,providerName,location,description,contact,price,bookingPrice,status,referLink } = req.body;
+      const { serviceName,providerName,location,description,contact,price,bookingPrice,status,referLink } = req.body;
 
       // Validation similar to create
-      if (!propertyName || propertyName.length < 3 || propertyName.length > 100) {
+      if (!serviceName || serviceName.length < 3 || serviceName.length > 100) {
          res.status(HttpStatusCode.BAD_REQUEST).json({ message: 'Invalid service Name' });
       }
       if (!providerName || providerName.length < 2 || providerName.length > 100) {
@@ -173,7 +176,7 @@ export default class AdminVenueController implements IAdminVenueController {
 
       // Prepare data for service
       const serviceData = {
-        propertyName,
+        serviceName,
         providerName,
         location: locObj.text,
         description,

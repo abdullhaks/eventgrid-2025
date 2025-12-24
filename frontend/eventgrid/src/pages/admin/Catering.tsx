@@ -3,13 +3,13 @@ import { /*Search,*/ MapPin, Plus, X, Eye, Pencil } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type ICateringDocument } from '../../interfaces/catering'; 
 import GeoapifyAutocomplete from '../../components/GeoapifyAutocomplete';
 import { addCateringService, getCateringService, getCateringServiceById, updateCateringService } from '../../services/apis/adminApi';
+import type { IServiceDocument } from '../../interfaces/service';
 
 const formSchema = z.object({
   serviceName: z.string().min(3, 'Service name must be at least 3 characters').max(100),
-  chiefChef: z.string().min(2, 'Provider name must be at least 2 characters').max(100),
+  providerName: z.string().min(2, 'Provider name must be at least 2 characters').max(100),
   location: z.object({
     type: z.literal('Point'),
     coordinates: z.tuple([z.number(), z.number()]),
@@ -56,7 +56,7 @@ const ViewModal = ({
 }: { 
   open: boolean; 
   onClose: () => void; 
-  service: ICateringDocument | null 
+  service: IServiceDocument | null 
 }) => {
   if (!open || !service) return null;
 
@@ -76,7 +76,7 @@ const ViewModal = ({
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Chief Chef</label>
-            <p className="mt-1 text-gray-900">{service.chiefChef}</p>
+            <p className="mt-1 text-gray-900">{service.providerName}</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Location</label>
@@ -194,8 +194,8 @@ const AddModal = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Chief Chef Name *</label>
-              <input {...register('chiefChef')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              {errors.chiefChef && <p className="mt-1 text-xs text-red-600">{errors.chiefChef.message}</p>}
+              <input {...register('providerName')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              {errors.providerName && <p className="mt-1 text-xs text-red-600">{errors.providerName.message}</p>}
             </div>
 
             <div className="md:col-span-2">
@@ -300,13 +300,13 @@ const EditModal = ({
   open: boolean; 
   onClose: () => void; 
   onSubmit: (data: FormData) => Promise<void> 
-  service: ICateringDocument | null 
+  service: IServiceDocument | null 
 }) => {
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch, setValue, clearErrors } = useForm<EditFormData>({
     resolver: zodResolver(editSchema),
     defaultValues: {
       serviceName: service?.serviceName,
-      chiefChef: service?.chiefChef,
+      providerName: service?.providerName,
       description: service?.description,
       contact: service?.contact,
       price: service?.price,
@@ -344,7 +344,7 @@ const EditModal = ({
     if (open && service) {
       reset({
         serviceName: service.serviceName,
-        chiefChef: service.chiefChef,
+        providerName: service.providerName,
         description: service.description,
         contact: service.contact,
         price: service.price,
@@ -393,8 +393,8 @@ const EditModal = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Provider Name *</label>
-              <input {...register('chiefChef')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              {errors.chiefChef && <p className="mt-1 text-xs text-red-600">{errors.chiefChef.message}</p>}
+              <input {...register('providerName')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              {errors.providerName && <p className="mt-1 text-xs text-red-600">{errors.providerName.message}</p>}
             </div>
 
             <div className="md:col-span-2">
@@ -491,13 +491,13 @@ const EditModal = ({
 };
 
 const Catering = () => {
-  const [services, setServices] = useState<ICateringDocument[]>([]);
+  const [services, setServices] = useState<IServiceDocument[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState<ICateringDocument | null>(null);
+  const [selectedService, setSelectedService] = useState<IServiceDocument | null>(null);
 
   const fetchData = async () => {
     try {
@@ -532,7 +532,7 @@ const Catering = () => {
   const handleAdd = async (formData: FormData) => {
     const payload = new FormData();
     payload.append('serviceName', formData.serviceName);
-    payload.append('chiefChef', formData.chiefChef);
+    payload.append('providerName', formData.providerName);
     payload.append('location', JSON.stringify(formData.location));
     payload.append('description', formData.description);
     payload.append('contact', formData.contact);
@@ -556,7 +556,7 @@ const Catering = () => {
 
     const payload = new FormData();
     payload.append('serviceName', formData.serviceName);
-    payload.append('chiefChef', formData.chiefChef);
+    payload.append('providerName', formData.providerName);
     payload.append('location', JSON.stringify(formData.location));
     payload.append('description', formData.description);
     payload.append('contact', formData.contact);
@@ -623,7 +623,7 @@ const Catering = () => {
               {services.map((s) => (
                 <tr key={s._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 font-medium text-gray-900">{s.serviceName}</td>
-                  <td className="px-6 py-4 text-gray-600">{s.chiefChef}</td>
+                  <td className="px-6 py-4 text-gray-600">{s.providerName}</td>
                   <td className="px-6 py-4 text-gray-500 flex items-center gap-1"><MapPin size={14} /> {s.location}</td>
                   <td className="px-6 py-4 font-medium">{s.price}</td>
                   <td className="px-6 py-4">{getStatusBadge(s.status)}</td>
@@ -648,7 +648,7 @@ const Catering = () => {
                 <div className="flex justify-between items-start">
                   <div>
                     <h4 className="font-semibold text-gray-900">{s.serviceName}</h4>
-                    <p className="text-sm text-gray-600">{s.chiefChef}</p>
+                    <p className="text-sm text-gray-600">{s.providerName}</p>
                   </div>
                   {getStatusBadge(s.status)}
                 </div>

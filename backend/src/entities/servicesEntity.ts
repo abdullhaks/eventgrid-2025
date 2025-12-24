@@ -1,11 +1,12 @@
 
 import { Document, Types } from "mongoose";
 
-export interface ICateringDocument extends Document {
+export interface IServicesDocument extends Document {
 
     _id: Types.ObjectId;
     serviceName: string;
-    chiefChef: string;
+    providerName: string;
+    serviceType:string;
     location: string;
     price : number;
     bookingPrice : number;
@@ -19,4 +20,4 @@ export interface ICateringDocument extends Document {
     uploadedAt: Date;
     
 }
-export interface cateringDocument extends ICateringDocument {}
+export interface servicesDocument extends IServicesDocument {}

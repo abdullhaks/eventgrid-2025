@@ -3,7 +3,7 @@ import { /*Search,*/ MapPin, Plus, X, Eye, Pencil } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type IPhotoAndVideoDocument } from '../../interfaces/photoAndVideo';
+import { type IPhotoAndVideoDocument } from '../../interfaces/service';
 import GeoapifyAutocomplete from '../../components/GeoapifyAutocomplete';
 import { addPhotoAndVideoService, getPhotoAndVideoService, getPhotoAndVideoServiceById, updatePhotoAndVideoService } from '../../services/apis/adminApi';
 

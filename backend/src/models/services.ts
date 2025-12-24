@@ -1,11 +1,12 @@
 import { Schema,model } from "mongoose";
-import { cateringDocument } from "../entities/cateringEntity"; 
-import { isNumberObject } from "util/types";
+import { servicesDocument } from "../entities/servicesEntity"; 
 
-const cateringSchema:Schema<cateringDocument> = new Schema ({
+
+const servicesSchema:Schema<servicesDocument> = new Schema ({
 
     serviceName: {type: String ,required : true },
-    chiefChef: {type: String ,required : true },
+    providerName: {type: String ,required : true },
+    serviceType: {type: String ,required : true },
     location: {type: String ,required : true },
     contact:{type: String ,required : true },
     price: {type: Number ,required : true },
@@ -22,6 +23,6 @@ const cateringSchema:Schema<cateringDocument> = new Schema ({
 
 
 
-const Catering = model<cateringDocument>('Catering',cateringSchema);
+const Services = model<servicesDocument>('Service',servicesSchema);
 
-export default Catering;
+export default Services;

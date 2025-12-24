@@ -1,8 +1,9 @@
-export interface IPhotoAndVideoDocument {
+export interface IServiceDocument {
 
     _id: string ;
     serviceName: string,
     providerName: string,
+    serviceType:string;
     location: string,
     description:string,
     contact:string,

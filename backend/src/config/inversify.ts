@@ -4,10 +4,8 @@ import { Container } from "inversify";
 
 import User from "../models/user";
 import Admin from "../models/admin";
-import PhotoAndVidoe from "../models/photoAndVideo";
+import Services from "../models/services";
 import Otp from "../models/otp";
-import Catering from "../models/catering";
-import Venue from "../models/venue";
 //controllers
 
 
@@ -59,19 +57,14 @@ import UserRepository from "../repositories/implementations/userRepository";
 import IAdminRepository from "../repositories/interfaces/IAdminRepository";
 import AdminRepository from "../repositories/implementations/adminRepository";
 
-import IPhotoAndVideoRepository from "../repositories/interfaces/IPhotoAndVideoRepository";
-import PhotoAndVideoRepository from "../repositories/implementations/photoAndVideoRepository";
+import IServicesRepository from "../repositories/interfaces/IServicesRepository";
+import ServicesRepository from "../repositories/implementations/servicesRepository";
 
 import OtpRepository from "../repositories/implementations/otpRepository";
 import IOtpRepository from "../repositories/interfaces/IOtpRepository";
 
 
-import CateringRepository from "../repositories/implementations/cateringRepository";
-import ICateringRepository from "../repositories/interfaces/ICateringRepository";
 
-
-import VenueRepository from "../repositories/implementations/venueRepository"; 
-import IVenueRepository from "../repositories/interfaces/IVenueRepository";
 
 
 //-------------------------------------------------------------------------------
@@ -83,20 +76,18 @@ const container = new Container();
 
 container.bind("userModel").toConstantValue(User);
 container.bind('adminModel').toConstantValue(Admin);
-container.bind('photoAndvidoeModel').toConstantValue(PhotoAndVidoe);
+container.bind('servicesModle').toConstantValue(Services);
 container.bind('otpModel').toConstantValue(Otp);
-container.bind('cateringModel').toConstantValue(Catering);
-container.bind('venueModel').toConstantValue(Venue);
+
 
 
 //repository binding
 
 container.bind<IUserRepository>("IUserRepository").to(UserRepository);
 container.bind<IAdminRepository>("IAdminRepository").to(AdminRepository)
-container.bind<IPhotoAndVideoRepository>("IPhotoAndVideoRepository").to(PhotoAndVideoRepository);
+container.bind<IServicesRepository>("IServicesRepository").to(ServicesRepository);
 container.bind<IOtpRepository>('IOtpRepository').to(OtpRepository);
-container.bind<ICateringRepository>('ICateringRepository').to(CateringRepository);
-container.bind<IVenueRepository>('IVenueRepository').to(VenueRepository);
+
 
 
 

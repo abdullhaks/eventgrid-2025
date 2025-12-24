@@ -3,12 +3,12 @@ import { /*Search,*/ MapPin, Plus, X, Eye, Pencil } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type IVenueDocument } from '../../interfaces/venue';
+import { type IServiceDocument } from '../../interfaces/service'; 
 import GeoapifyAutocomplete from '../../components/GeoapifyAutocomplete';
 import { addVenueService, getVenueService, getVenueServiceById, updateVenueService } from '../../services/apis/adminApi';
 
 const formSchema = z.object({
-  propertyName: z.string().min(3, 'Service name must be at least 3 characters').max(100),
+  serviceName: z.string().min(3, 'Service name must be at least 3 characters').max(100),
   providerName: z.string().min(2, 'Provider name must be at least 2 characters').max(100),
   location: z.object({
     type: z.literal('Point'),
@@ -56,7 +56,7 @@ const ViewModal = ({
 }: { 
   open: boolean; 
   onClose: () => void; 
-  service: IVenueDocument | null 
+  service: IServiceDocument | null 
 }) => {
   if (!open || !service) return null;
 
@@ -72,7 +72,7 @@ const ViewModal = ({
         <div className="p-6 space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">Property Name</label>
-            <p className="mt-1 text-gray-900">{service.propertyName}</p>
+            <p className="mt-1 text-gray-900">{service.serviceName}</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Provider Name</label>
@@ -188,8 +188,8 @@ const AddModal = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Property Name *</label>
-              <input {...register('propertyName')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              {errors.propertyName && <p className="mt-1 text-xs text-red-600">{errors.propertyName.message}</p>}
+              <input {...register('serviceName')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              {errors.serviceName && <p className="mt-1 text-xs text-red-600">{errors.serviceName.message}</p>}
             </div>
 
             <div>
@@ -300,12 +300,12 @@ const EditModal = ({
   open: boolean; 
   onClose: () => void; 
   onSubmit: (data: FormData) => Promise<void> 
-  service: IVenueDocument | null 
+  service: IServiceDocument | null 
 }) => {
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch, setValue, clearErrors } = useForm<EditFormData>({
     resolver: zodResolver(editSchema),
     defaultValues: {
-      propertyName: service?.propertyName,
+      serviceName: service?.serviceName,
       providerName: service?.providerName,
       description: service?.description,
       contact: service?.contact,
@@ -343,7 +343,7 @@ const EditModal = ({
   useEffect(() => {
     if (open && service) {
       reset({
-        propertyName: service.propertyName,
+        serviceName: service.serviceName,
         providerName: service.providerName,
         description: service.description,
         contact: service.contact,
@@ -387,8 +387,8 @@ const EditModal = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Property Name *</label>
-              <input {...register('propertyName')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
-              {errors.propertyName && <p className="mt-1 text-xs text-red-600">{errors.propertyName.message}</p>}
+              <input {...register('serviceName')} className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+              {errors.serviceName && <p className="mt-1 text-xs text-red-600">{errors.serviceName.message}</p>}
             </div>
 
             <div>
@@ -491,13 +491,13 @@ const EditModal = ({
 };
 
 const Venues = () => {
-  const [services, setServices] = useState<IVenueDocument[]>([]);
+  const [services, setServices] = useState<IServiceDocument[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState<IVenueDocument | null>(null);
+  const [selectedService, setSelectedService] = useState<IServiceDocument | null>(null);
 
   const fetchData = async () => {
     try {
@@ -531,7 +531,7 @@ const Venues = () => {
 
   const handleAdd = async (formData: FormData) => {
     const payload = new FormData();
-    payload.append('propertyName', formData.propertyName);
+    payload.append('serviceName', formData.serviceName);
     payload.append('providerName', formData.providerName);
     payload.append('location', JSON.stringify(formData.location));
     payload.append('description', formData.description);
@@ -555,7 +555,7 @@ const Venues = () => {
     if (!selectedService) return;
 
     const payload = new FormData();
-    payload.append('propertyName', formData.propertyName);
+    payload.append('serviceName', formData.serviceName);
     payload.append('providerName', formData.providerName);
     payload.append('location', JSON.stringify(formData.location));
     payload.append('description', formData.description);
@@ -622,7 +622,7 @@ const Venues = () => {
             <tbody className="divide-y divide-gray-100">
               {services.map((s) => (
                 <tr key={s._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 font-medium text-gray-900">{s.propertyName}</td>
+                  <td className="px-6 py-4 font-medium text-gray-900">{s.serviceName}</td>
                   <td className="px-6 py-4 text-gray-600">{s.providerName}</td>
                   <td className="px-6 py-4 text-gray-500 flex items-center gap-1"><MapPin size={14} /> {s.location}</td>
                   <td className="px-6 py-4 font-medium">{s.price}</td>
@@ -647,7 +647,7 @@ const Venues = () => {
               <div key={s._id} className="p-4 space-y-3">
                 <div className="flex justify-between items-start">
                   <div>
-                    <h4 className="font-semibold text-gray-900">{s.propertyName}</h4>
+                    <h4 className="font-semibold text-gray-900">{s.serviceName}</h4>
                     <p className="text-sm text-gray-600">{s.providerName}</p>
                   </div>
                   {getStatusBadge(s.status)}

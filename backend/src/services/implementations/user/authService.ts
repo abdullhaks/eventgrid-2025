@@ -208,9 +208,11 @@ async verifyOtp(verifyData: otpVerifyRequestDto): Promise<any> {
       throw new Error("Error in sending mail");
     }
 
+    
+
       throw {
         status: HttpStatusCode.MOVED_PERMANENTLY,
-        message: "Please verify your email before logging in",
+        message: `Please verify your email ${existingUser.email}`,
         code: "EMAIL_NOT_VERIFIED",
       };
     };

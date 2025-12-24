@@ -98,6 +98,8 @@ export const Login = ({ onNavigate }:any) => {
       console.error("Login error:", error);
       const errorMessage = error.message || "Failed to log in";
       if(error.code==="EMAIL_NOT_VERIFIED"){
+        let email = errorMessage.split(" ")[4];
+        localStorage.setItem("eventgrid_email",email);
         onNavigate("otp");
       }else if (errorMessage.includes("Invalid credentials")) {
         // setErrors((prev) => ({

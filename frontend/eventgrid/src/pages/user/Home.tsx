@@ -7,32 +7,15 @@ import { MapPin, Star, Camera, Utensils,  Heart,
   ArrowRight,
   ChevronRight,
   Play} from 'lucide-react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { logoutUser as logout } from "../../services/apis/userApi";
-// import { logoutUser } from "../../redux/slices/userSlice";
-// import type { IUser } from '../../interfaces/user';
 import { useNavigate } from 'react-router-dom';
-// import ConfirmModal from '../../components/ConfirmModal';
 import { Footer } from '../LandingPage';
 import { Navbar } from '../../components/Navbar';
 import { CategoryFilter } from '../../components/CategoryFilter';
+import { useSelector } from 'react-redux';
+import type { IUser } from '../../interfaces/user'; 
 
 
 
-
-
-// const CATEGORIES = [
-//   { id: 'all', label: 'All', icon: Sparkles, color: 'bg-stone-900', text: 'text-white' },
-//   { id: 'venue', label: 'Venues', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-//   { id: 'wedding_planners', label: 'Wedding Planners', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-//   { id: 'destination_wedding', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-//   { id: 'corporate_event', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-//   { id: 'beach_wedding', label: 'Beach Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-//   { id: 'music_and_entertainment', label: 'Music and Entertainment', icon: Music, color: 'bg-purple-600', text: 'text-white' },
-//   { id: 'private_parties', label: 'Private Parties', icon: Music, color: 'bg-purple-600', text: 'text-white' },
-//   { id: 'catering', label: 'Catering Service', icon: Utensils, color: 'bg-emerald-600', text: 'text-white' },
-//   { id: 'photography&videography', label: 'Photography & Videography', icon: Camera, color: 'bg-blue-600', text: 'text-white' },
-// ];
 
 const SERVICES = [
   {
@@ -125,11 +108,6 @@ const SERVICES = [
 // --- COMPONENTS ---
 
 
-
-
-
-
-
 export const ServiceCard = ({ service, index }:any) => {
   // Dynamic color map
   const colors = {
@@ -215,9 +193,16 @@ export const ServiceCard = ({ service, index }:any) => {
   );
 };
 
+interface RootState {
+  user: {
+    user: IUser;
+  };
+}
 export const HeroSection = () => {
 
   const navigate = useNavigate();
+  const user = useSelector((state: RootState) => state.user.user);
+  
 
   return (
     <div className="relative pt-12 pb-8 px-4 sm:px-8 max-w-7xl mx-auto">
@@ -233,7 +218,7 @@ export const HeroSection = () => {
             transition={{ duration: 0.6 }}
           >
             <span className="inline-block px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-sm font-medium mb-6">
-              👋 Welcome back, Alex
+              👋 Welcome back, {user.firstName}
             </span>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold font-display tracking-tight leading-[1.1] mb-6">
               Your Event. <br/>
@@ -511,13 +496,13 @@ export const Home = () => {
           <div className="max-w-7xl mx-auto">
              <div className="px-8 mb-2 flex justify-between items-end">
                 <h2 className="text-2xl font-bold font-display text-stone-900">Explore Services</h2>
-                <div className="hidden sm:flex gap-2 text-sm font-medium text-stone-500">
+                {/* <div className="hidden sm:flex gap-2 text-sm font-medium text-stone-500">
                    <span className="text-stone-900 cursor-pointer">Recommended</span>
                    <span className="mx-2">·</span>
                    <span className="hover:text-stone-900 cursor-pointer transition-colors">Price (Low-High)</span>
                    <span className="mx-2">·</span>
                    <span className="hover:text-stone-900 cursor-pointer transition-colors">Top Rated</span>
-                </div>
+                </div> */}
              </div>
             <CategoryFilter activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
           </div>

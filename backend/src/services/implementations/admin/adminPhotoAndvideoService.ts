@@ -1,7 +1,7 @@
 import { inject,injectable } from "inversify";
 import IAdminPhotoAndvideoService from "../../interfaces/admin/IAdminPhotoAndvideoService";
-import IPhotoAndVideoRepository from "../../../repositories/interfaces/IPhotoAndVideoRepository";
-import { IPhotoAndVideoDocument } from "../../../entities/photoAndVideo";
+import IServicesRepository from "../../../repositories/interfaces/IServicesRepository";
+import { IServicesDocument } from "../../../entities/servicesEntity"; 
 import { uploadFileToS3 } from "../../../helpers/uploadS3";
 import { HttpStatusCode } from "../../../utils/enum";
 
@@ -9,24 +9,24 @@ import { HttpStatusCode } from "../../../utils/enum";
 
 export default class AdminPhotoAndvideoService implements IAdminPhotoAndvideoService {
     constructor(
-        @inject("IPhotoAndVideoRepository") private _photoAndVideoRepository : IPhotoAndVideoRepository ,
+        @inject("IServicesRepository") private _servicesRepository : IServicesRepository ,
       
     ) {}
 
-async getPhotoAndVideoServices(page: number, limit: number): Promise<{ services: IPhotoAndVideoDocument[], total: number }> {
+async getPhotoAndVideoServices(page: number, limit: number): Promise<{ services: IServicesDocument[], total: number }> {
     try {
 
       const skip = (page - 1) * limit;
 
-      const services = await this._photoAndVideoRepository.findAll({},{sort:{serviceName:1},limit:limit,skip:skip}); // Assume repository supports pagination with skip and limit
-      const total = await this._photoAndVideoRepository.countDocument();
+      const services = await this._servicesRepository.findAll({serviceType:"photoAndVideo"},{sort:{serviceName:1},limit:limit,skip:skip}); // Assume repository supports pagination with skip and limit
+      const total = await this._servicesRepository.countDocument({serviceType:"photoAndVideo"});
       return { services,total  };
     } catch (error) {
       throw new Error("Error retrieving photo and video services");
     }   
   };
 
-  async createPhotoAndVideoServicesServc(serviceData: any): Promise<IPhotoAndVideoDocument> {
+  async createPhotoAndVideoServicesServc(serviceData: any): Promise<IServicesDocument> {
     try {
       let coverImageUrl: string | undefined;
       if (serviceData.coverImage) {
@@ -47,9 +47,10 @@ async getPhotoAndVideoServices(page: number, limit: number): Promise<{ services:
       }
 
       serviceData.coverImage = coverImageUrl;
+      serviceData.serviceType = 'photoAndVideo';
       // delete serviceData.coverImage; // Remove file object before saving to DB
       console.log("service data for saving ....",serviceData);
-      const created = await this._photoAndVideoRepository.create(serviceData);
+      const created = await this._servicesRepository.create(serviceData);
       return created;
     } catch (error) {
       throw new Error("Error creating photo and video service");
@@ -57,17 +58,17 @@ async getPhotoAndVideoServices(page: number, limit: number): Promise<{ services:
   }
 
 
-  async getById(id: string): Promise<IPhotoAndVideoDocument | null> {
+  async getById(id: string): Promise<IServicesDocument | null> {
       try {
-        return await this._photoAndVideoRepository.findOne({_id:id});
+        return await this._servicesRepository.findOne({_id:id});
       } catch (error) {
         throw new Error("Error retrieving photo and video service");
       }
   };
 
-    async updatePhotoAndVideoService(id: string, serviceData: any): Promise<IPhotoAndVideoDocument | null> {
+    async updatePhotoAndVideoService(id: string, serviceData: any): Promise<IServicesDocument | null> {
       try {
-        const existing = await this._photoAndVideoRepository.findOne({_id:id});
+        const existing = await this._servicesRepository.findOne({_id:id});
         if (!existing) return null;
 
         if (serviceData.coverImage) {
@@ -89,7 +90,7 @@ async getPhotoAndVideoServices(page: number, limit: number): Promise<{ services:
           serviceData.coverImage = existing.coverImage;
         }
 
-        const updated = await this._photoAndVideoRepository.update({_id:id}, serviceData);
+        const updated = await this._servicesRepository.update({_id:id}, serviceData);
         return updated;
       } catch (error) {
         throw new Error("Error updating photo and video service");

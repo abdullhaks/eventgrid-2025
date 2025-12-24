@@ -1,31 +1,32 @@
 import { inject,injectable } from "inversify";
 import IAdminVenueService from "../../interfaces/admin/IAdminVenueService"; 
-import IVenueRepository from "../../../repositories/interfaces/IVenueRepository"; 
-import { IVenueDocument } from "../../../entities/venueEntity"; 
+import { IServicesDocument } from "../../../entities/servicesEntity"; 
 import { uploadFileToS3 } from "../../../helpers/uploadS3";
 import { HttpStatusCode } from "../../../utils/enum";
+import IServicesRepository from "../../../repositories/interfaces/IServicesRepository";
 
 @injectable()
 export default class AdminVenueService implements IAdminVenueService {
     constructor(
-        @inject("IVenueRepository") private _venueRepository : IVenueRepository ,
+        @inject("IServicesRepository") private _servicesRepository : IServicesRepository ,
+        
       
     ) {}
 
-async getVenueServices(page: number, limit: number): Promise<{ services: IVenueDocument[], total: number }> {
+async getVenueServices(page: number, limit: number): Promise<{ services: IServicesDocument[], total: number }> {
     try {
 
       const skip = (page - 1) * limit;
 
-      const services = await this._venueRepository.findAll({},{sort:{serviceName:1},limit:limit,skip:skip}); // Assume repository supports pagination with skip and limit
-      const total = await this._venueRepository.countDocument();
+      const services = await this._servicesRepository.findAll({serviceType:"venue"},{sort:{serviceName:1},limit:limit,skip:skip}); // Assume repository supports pagination with skip and limit
+      const total = await this._servicesRepository.countDocument({serviceType:"venue"});
       return { services,total  };
     } catch (error) {
       throw new Error("Error retrieving venue services");
     }   
   };
 
-  async createVenueServicesServc(serviceData: any): Promise<IVenueDocument> {
+  async createVenueServicesServc(serviceData: any): Promise<IServicesDocument> {
     try {
       let coverImageUrl: string | undefined;
       if (serviceData.coverImage) {
@@ -46,9 +47,11 @@ async getVenueServices(page: number, limit: number): Promise<{ services: IVenueD
       }
 
       serviceData.coverImage = coverImageUrl;
+      serviceData.serviceType = 'venue';
+
       // delete serviceData.coverImage; // Remove file object before saving to DB
       console.log("service data for saving ....",serviceData);
-      const created = await this._venueRepository.create(serviceData);
+      const created = await this._servicesRepository.create(serviceData);
       return created;
     } catch (error) {
       throw new Error("Error creating venue service");
@@ -56,17 +59,17 @@ async getVenueServices(page: number, limit: number): Promise<{ services: IVenueD
   }
 
 
-  async getById(id: string): Promise<IVenueDocument | null> {
+  async getById(id: string): Promise<IServicesDocument | null> {
       try {
-        return await this._venueRepository.findOne({_id:id});
+        return await this._servicesRepository.findOne({_id:id});
       } catch (error) {
         throw new Error("Error retrieving venue service");
       }
   };
 
-    async updateVenueService(id: string, serviceData: any): Promise<IVenueDocument | null> {
+    async updateVenueService(id: string, serviceData: any): Promise<IServicesDocument | null> {
       try {
-        const existing = await this._venueRepository.findOne({_id:id});
+        const existing = await this._servicesRepository.findOne({_id:id});
         if (!existing) return null;
 
         if (serviceData.coverImage) {
@@ -88,7 +91,7 @@ async getVenueServices(page: number, limit: number): Promise<{ services: IVenueD
           serviceData.coverImage = existing.coverImage;
         }
 
-        const updated = await this._venueRepository.update({_id:id}, serviceData);
+        const updated = await this._servicesRepository.update({_id:id}, serviceData);
         return updated;
       } catch (error) {
         throw new Error("Error updating venue service");

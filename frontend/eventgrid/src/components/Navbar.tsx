@@ -108,7 +108,6 @@ export const Navbar = () => {
               <div className="flex items-center gap-3 pl-4 border-l border-stone-200" ref={profileRef}>
                 <div className="text-right hidden lg:block">
                   <p className="text-sm font-bold text-stone-900 leading-none">{user?.firstName || "Guest"}</p>
-                  <p className="text-xs text-stone-500">Event Planner</p>
                 </div>
                 <div className="relative z-10">
                   <div 
