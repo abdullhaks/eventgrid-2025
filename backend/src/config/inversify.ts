@@ -6,6 +6,7 @@ import User from "../models/user";
 import Admin from "../models/admin";
 import Services from "../models/services";
 import Otp from "../models/otp";
+import Booking from "../models/booking";
 //controllers
 
 
@@ -13,10 +14,10 @@ import AuthController from "../controllers/implementations/user/authController";
 import IAuthController from "../controllers/interfaces/user/IAuthController";
 import ProfileController from "../controllers/implementations/user/profileController";
 import IProfileController from "../controllers/interfaces/user/IProfileController";
-import ISearchController from "../controllers/interfaces/user/ISearchController";
-import SearchController from "../controllers/implementations/user/searchController";
-
-
+import IServicesController from "../controllers/interfaces/user/IServicesController"; 
+import ServicesController from "../controllers/implementations/user/servicesController"; 
+import IPaymentController from "../controllers/interfaces/user/IPaymentController";
+import PaymentController from "../controllers/implementations/user/paymentController";
 
 
 import AdminAuthController from "../controllers/implementations/admin/adminAuthController";
@@ -35,9 +36,10 @@ import AuthService from "../services/implementations/user/authService";
 import IAuthService from "../services/interfaces/user/IAuthService";
 import ProfileService from "../services/implementations/user/profileService";
 import IProfileService from "../services/interfaces/user/IProfileService";  
-import SearchService from "../services/implementations/user/searchService";
-import ISearchService from "../services/interfaces/user/ISearchService";
-
+import ServicesService from "../services/implementations/user/servicesService"; 
+import IServicesService from "../services/interfaces/user/IServicesService"; 
+import PaymentService from "../services/implementations/user/paymentService";
+import IPaymentService from "../services/interfaces/user/IPaymentService";
 
 
 import AdminAuthService from "../services/implementations/admin/adminAuthService";
@@ -66,7 +68,8 @@ import OtpRepository from "../repositories/implementations/otpRepository";
 import IOtpRepository from "../repositories/interfaces/IOtpRepository";
 
 
-
+import BookingRepository from "../repositories/implementations/bookingRepository";
+import IBookingRepository from "../repositories/interfaces/IBookingRepository";
 
 
 //-------------------------------------------------------------------------------
@@ -80,7 +83,7 @@ container.bind("userModel").toConstantValue(User);
 container.bind('adminModel').toConstantValue(Admin);
 container.bind('servicesModle').toConstantValue(Services);
 container.bind('otpModel').toConstantValue(Otp);
-
+container.bind('bookingModel').toConstantValue(Booking);
 
 
 //repository binding
@@ -89,15 +92,15 @@ container.bind<IUserRepository>("IUserRepository").to(UserRepository);
 container.bind<IAdminRepository>("IAdminRepository").to(AdminRepository)
 container.bind<IServicesRepository>("IServicesRepository").to(ServicesRepository);
 container.bind<IOtpRepository>('IOtpRepository').to(OtpRepository);
-
-
+container.bind<IBookingRepository>('IBookingRepository').to(BookingRepository);
 
 
 //service binding
 
 container.bind<IAuthService>("IAuthService").to(AuthService);
 container.bind<IProfileService>("IProfileService").to(ProfileService);
-container.bind<ISearchService>("ISearchService").to(SearchService);
+container.bind<IServicesService>("IServicesService").to(ServicesService);
+container.bind<IPaymentService>('IPaymentService').to(PaymentService);
 
 
 container.bind<IAdminAuthService>("IAdminAuthService").to(AdminAuthService);
@@ -107,12 +110,13 @@ container.bind<IAdminVenueService>('IAdminVenueService').to(AdminVenueService);
 
 
 
-
-
 //controller binding
 container.bind<IAuthController>("IAuthController").to(AuthController);
 container.bind<IProfileController>("IProfileController").to(ProfileController);
-container.bind<ISearchController>("ISearchController").to(SearchController);
+container.bind<IServicesController>("IServicesController").to(ServicesController);
+container.bind<IPaymentController>("IPaymentController").to(PaymentController);
+
+
 
 
 container.bind<IAdminAuthController>("IAdminAuthController").to(AdminAuthController)

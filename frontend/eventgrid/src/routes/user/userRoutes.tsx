@@ -10,6 +10,9 @@ import UserPrivateRoute from "../../routes/user/privateRoutes";
 import Auth from "../../pages/user/Auth";
 import { SearchConsole } from "../../pages/user/SearchConsole";
 import { Otp } from "../../pages/user/Otp"; 
+import { ServiceDetails } from "../../pages/user/ServiceDetails";
+import { BookingFailed } from "../../components/BookingFailed";
+import { BookingSuccess } from "../../components/BookingSuccess";
 
 const UserRoutes = () => {
   return (
@@ -24,6 +27,12 @@ const UserRoutes = () => {
       <Route element={<UserPrivateRoute />}>
         <Route path="/home" element={<Home />} />
         <Route path="/search" element={<SearchConsole />} />
+        <Route path="/service/:serviceId" element={<ServiceDetails />} />
+        <Route path="/booking-failed" element={<BookingFailed />} />
+        <Route path="/booking-success/:bookingId" element={<BookingSuccess />} />
+
+
+        
         {/* <Route path="/settings" element={<Profile />} />
         <Route path="/create" element={<CreateArticle />} />
         <Route path="/edit/:articleId" element={<CreateArticle editMode={true} />} /> */}

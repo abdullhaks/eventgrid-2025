@@ -1,22 +1,22 @@
 import { inject, injectable } from "inversify";
-import ISearchController from "../../interfaces/user/ISearchController";
 import { HttpStatusCode } from "../../../utils/enum";
 import { Request, Response } from "express";
-import ISearchService from "../../../services/interfaces/user/ISearchService";
+import ISearchService from "../../../services/interfaces/user/IServicesService";
+import IServicesController from "../../interfaces/user/IServicesController";
 
 @injectable()
-export default class SearchController implements ISearchController {
+export default class ServicesController implements IServicesController {
   constructor(
-    @inject("ISearchService") private _searchService: ISearchService
+    @inject("IServicesService") private _servicesService: ISearchService
   ) {}
 
   async searchServices(req: Request, res: Response): Promise<void> {
     try {
       const {
         search = "",
-        category = "", // serviceType
+        category = "", 
         location = "",
-        sort = "newest", // newest | price_asc | price_desc | name_asc
+        sort = "newest", 
         page = "1",
         limit = "12",
       } = req.query;
@@ -63,7 +63,7 @@ export default class SearchController implements ISearchController {
         // default = newest (createdAt -1)
       }
 
-      const { services, total } = await this._searchService.searchServices({
+      const { services, total } = await this._servicesService.searchServices({
         filters,
         sort: sortObj,
         page: pageNum,
@@ -95,5 +95,19 @@ export default class SearchController implements ISearchController {
         error: error.message,
       });
     }
-  }
+  };
+
+  async getServiceById(req: Request, res: Response): Promise<void> {
+    try {
+      const service = await this._servicesService.getById(req.params.id);
+      if (!service) {
+         res.status(HttpStatusCode.NOT_FOUND).json({ message: 'Service not found' });
+      }
+      res.status(HttpStatusCode.OK).json(service);
+    } catch (error) {
+      res.status(HttpStatusCode.INTERNAL_SERVER_ERROR).json({ message: 'Error retrieving service', error });
+    }
+  };
+
+
 }

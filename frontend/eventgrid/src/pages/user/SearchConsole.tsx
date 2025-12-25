@@ -18,6 +18,7 @@ import { Navbar } from "../../components/Navbar";
 import { CategoryFilter } from "../../components/CategoryFilter";
 import { searchServices } from "../../services/apis/userApi";
 import type { IServiceDocument } from "../../interfaces/service";
+import { Link } from "react-router-dom";
 const DEBOUNCE_DELAY = 500;
 
 // Map frontend category ids → backend serviceType values
@@ -177,12 +178,15 @@ export const ServiceCard = ({
               <span className="text-xs text-stone-500">/{service.unit}</span>
             )}
           </div>
-          <button className="p-2 rounded-full bg-stone-100 hover:bg-stone-900 hover:text-white transition-all group">
+          <Link
+            to={`/service/${service._id}`}
+            className="p-2 rounded-full bg-stone-100 hover:bg-stone-900 hover:text-white transition-all group"
+          >
             <ArrowRight
               size={16}
               className="group-hover:translate-x-1 transition-transform"
             />
-          </button>
+          </Link>
         </div>
       </div>
     </motion.div>

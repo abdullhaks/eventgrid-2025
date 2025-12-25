@@ -4,7 +4,7 @@ import { IServicesDocument } from "../../../entities/servicesEntity";
 import { uploadFileToS3 } from "../../../helpers/uploadS3";
 import { HttpStatusCode } from "../../../utils/enum";
 import IServicesRepository from "../../../repositories/interfaces/IServicesRepository";
-import ISearchService from "../../interfaces/user/ISearchService";
+import IServicesService from "../../interfaces/user/IServicesService";
 
 interface SearchParams {
   filters: any;
@@ -14,7 +14,7 @@ interface SearchParams {
 }
 
 @injectable()
-export default class SearchService implements ISearchService {
+export default class ServicesService implements IServicesService {
   constructor(
     @inject("IServicesRepository")
     private _servicesRepository: IServicesRepository
@@ -38,5 +38,14 @@ export default class SearchService implements ISearchService {
     const total = await this._servicesRepository.countDocuments(filters);
 
     return { services, total };
-  }
+  };
+
+   async getById(id: string): Promise<IServicesDocument | null> {
+      try {
+        return await this._servicesRepository.findOne({_id:id});
+      } catch (error) {
+        throw new Error("Error retrieving venue service");
+      }
+  };
+
 }

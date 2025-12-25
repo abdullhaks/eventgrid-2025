@@ -1,7 +1,7 @@
 
 
 
-export default interface ISearchService {
+export default interface IServicesService {
     searchServices({
         filters,
         sort,
@@ -13,5 +13,6 @@ export default interface ISearchService {
         page:number,
         limit:number
       }): Promise<any>;
+       getById(id:string): Promise<any>;
  
 }

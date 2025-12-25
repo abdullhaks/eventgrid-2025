@@ -10,7 +10,12 @@ export const ROUTES = {
     logout: "/user/logout",
     updateProfile : "/user/updateProfile",
     updateProfileImage : "/user/updateProfileImage",
-    search: "/user/search"
+    search: "/user/search",
+    service: "/user/service",
+    createOrder: "/user/createOrder",
+    verifyPayment: "/user/verifyPayment"
+
+
     
   },
 
