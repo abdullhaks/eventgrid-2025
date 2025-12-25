@@ -3,7 +3,7 @@ import { /*Search,*/ MapPin, Plus, X, Eye, Pencil } from 'lucide-react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type IPhotoAndVideoDocument } from '../../interfaces/service';
+import { type IServiceDocument } from '../../interfaces/service';
 import GeoapifyAutocomplete from '../../components/GeoapifyAutocomplete';
 import { addPhotoAndVideoService, getPhotoAndVideoService, getPhotoAndVideoServiceById, updatePhotoAndVideoService } from '../../services/apis/adminApi';
 
@@ -56,7 +56,7 @@ const ViewModal = ({
 }: { 
   open: boolean; 
   onClose: () => void; 
-  service: IPhotoAndVideoDocument | null 
+  service: IServiceDocument | null 
 }) => {
   if (!open || !service) return null;
 
@@ -300,7 +300,7 @@ const EditModal = ({
   open: boolean; 
   onClose: () => void; 
   onSubmit: (data: FormData) => Promise<void> 
-  service: IPhotoAndVideoDocument | null 
+  service: IServiceDocument | null 
 }) => {
   const { register, handleSubmit, formState: { errors, isSubmitting }, reset, watch, setValue, clearErrors } = useForm<EditFormData>({
     resolver: zodResolver(editSchema),
@@ -491,13 +491,13 @@ const EditModal = ({
 };
 
 const Photography = () => {
-  const [services, setServices] = useState<IPhotoAndVideoDocument[]>([]);
+  const [services, setServices] = useState<IServiceDocument[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState<IPhotoAndVideoDocument | null>(null);
+  const [selectedService, setSelectedService] = useState<IServiceDocument | null>(null);
 
   const fetchData = async () => {
     try {
