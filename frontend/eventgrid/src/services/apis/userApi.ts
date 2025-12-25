@@ -1,5 +1,6 @@
 import { userInstance } from "../../utils/axiosFactory";
 import { ROUTES } from "../../constants/routes";
+import type { iSearchPrams } from "../../interfaces/user";
 
 export const signupUser = async (userData: any) => {
   try {
@@ -57,6 +58,21 @@ export const logoutUser = async () => {
   try {
     const response = await userInstance.post(ROUTES.user.logout);
     return response.data;
+  } catch (error) {
+    console.error("Error logging out user:", error);
+    throw error;
+  }
+};
+
+
+export const searchServices = async (params:iSearchPrams) => {
+  try {
+    console.log("serch params is ",params);
+    const response = await userInstance.get(ROUTES.user.search,{
+      params
+    });
+    console.log('response form frontend is',response);
+    return response.data.data;
   } catch (error) {
     console.error("Error logging out user:", error);
     throw error;

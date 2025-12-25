@@ -1,8 +1,8 @@
-import{ useState, useEffect,} from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import{ useState,} from 'react';
+import { motion } from 'framer-motion';
 import { MapPin, Star, Camera, Utensils,  Heart,
   //  Filter, Search,LogOut, Calendar, Music,Home as HOMEICON,
- User,Sparkles,Zap,
+ User,Zap,
   Check,
   ArrowRight,
   ChevronRight,
@@ -18,6 +18,98 @@ import type { IUser } from '../../interfaces/user';
 
 
 const SERVICES = [
+   {
+    id: 1,
+    title: "The Grand Victorian",
+    description: "Imagine celebrating the most special events of your life without worrying about a single thing.",
+    category: "venue",
+    price: 2500,
+    rating: 4.9,
+    reviews: 128,
+    location: "Downtown, Metro City",
+    image: "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&q=80&w=800",
+    tags: ["Historic", "Indoor", "500 Guests"],
+    color: "orange"
+  },
+  {
+    id: 2,
+    title: "DJ Neon Pulse",
+    description: "Imagine celebrating the most special events of your life without worrying about a single thing.",
+    category: "music_and_entertainment", // Matches Category ID
+    price: 800,
+    rating: 5.0,
+    reviews: 84,
+    location: "Available Citywide",
+    image: "https://images.unsplash.com/photo-1571266028243-3716f02d2d2e?auto=format&fit=crop&q=80&w=800",
+    tags: ["EDM", "House", "Equipment Included"],
+    color: "purple"
+  },
+  {
+    id: 3,
+    title: "Gourmet Earth Catering",
+    description: "Imagine celebrating the most special events of your life without worrying about a single thing.",
+    category: "catering",
+    price: 45,
+    unit: "per plate",
+    rating: 4.8,
+    reviews: 215,
+    location: "Metro Region",
+    image: "https://images.unsplash.com/photo-1555244162-803834f70033?auto=format&fit=crop&q=80&w=800",
+    tags: ["Vegan Options", "Farm to Table", "Full Service"],
+    color: "emerald"
+  },
+  {
+    id: 4,
+    title: "Lumina Studios",
+    description: "Imagine celebrating the most special events of your life without worrying about a single thing.",
+    category: "photoAndVideo", // Matches Category ID
+    price: 1200,
+    rating: 4.9,
+    reviews: 56,
+    location: "Greater Area",
+    image: "https://images.unsplash.com/photo-1520854221256-17451cc330e7?auto=format&fit=crop&q=80&w=800",
+    tags: ["Drone Shot", "Cinematic", "Same Day Edit"],
+    color: "blue"
+  },
+  {
+    id: 5,
+    title: "Skyline Roof Gardens",
+    description: "Imagine celebrating the most special events of your life without worrying about a single thing.",
+    category: "venue",
+    price: 3500,
+    rating: 4.7,
+    reviews: 92,
+    location: "Uptown District",
+    image: "https://images.unsplash.com/photo-1533174072545-e8d4aa97edf9?auto=format&fit=crop&q=80&w=800",
+    tags: ["Outdoor", "City View", "Modern"],
+    color: "orange"
+  },
+  {
+    id: 6,
+    title: "Acoustic Soul Band",
+    description: "Imagine celebrating the most special events of your life without worrying about a single thing.",
+    category: "music_and_entertainment", // Matches Category ID
+    price: 1500,
+    rating: 4.8,
+    reviews: 45,
+    location: "Travels up to 50mi",
+    image: "https://images.unsplash.com/photo-1465847899078-b413929f7120?auto=format&fit=crop&q=80&w=800",
+    tags: ["Live Music", "Jazz", "Weddings"],
+    color: "purple"
+  },
+  {
+    id: 7,
+    title: "Lens & Light",
+    description: "Imagine celebrating the most special events of your life without worrying about a single thing.",
+    category: "photoAndVideo", // Matches Category ID
+    price: 1800,
+    rating: 4.6,
+    reviews: 30,
+    location: "Metro City",
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&q=80&w=800",
+    tags: ["Candid", "Portrait", "Album Included"],
+    color: "blue"
+  },
   {
     id: 1,
     title: "The Grand Victorian",
@@ -58,7 +150,7 @@ const SERVICES = [
   {
     id: 4,
     title: "Lumina Studios",
-    category: "photo",
+    category: "photoAndVideo",
     price: 1200,
     rating: 4.9,
     reviews: 56,
@@ -94,7 +186,7 @@ const SERVICES = [
   {
     id: 7,
     title: "Lens & Light",
-    category: "photo",
+    category: "photoAndVideo",
     price: 1800,
     rating: 4.6,
     reviews: 30,
@@ -321,7 +413,7 @@ const PhotographyShowcase = ({ services }: { services: any[] }) => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {services.map((service, idx) => (
+                    {services.slice(0, 3).map((service, idx) => (
                         <motion.div 
                             key={service.id}
                             initial={{ opacity: 0, y: 30 }}
@@ -331,6 +423,44 @@ const PhotographyShowcase = ({ services }: { services: any[] }) => {
                         >
                             <ServiceCard service={service} variant="dark" />
                         </motion.div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    )
+}
+
+
+
+export const CreativeShowcase = ({ services }: { services: any[] }) => {
+    if (services.length === 0) return null;
+    return (
+        <section className="py-16 bg-stone-900 text-white rounded-3xl my-8 mx-4 px-6 md:px-12 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-purple-600/20 blur-3xl rounded-full" />
+            <div className="relative z-10">
+                <div className="text-center mb-12">
+                    <h3 className="font-serif text-3xl md:text-4xl mb-4">Creative Minds</h3>
+                    <p className="text-stone-400 max-w-xl mx-auto">Photographers, Musicians, and Entertainers who add the soul to your celebration.</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {services.slice(0, 4).map(service => (
+                       <div key={service.id} className="bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all cursor-pointer group">
+                          <img src={service.image} className="w-full h-40 object-cover rounded-lg mb-4 group-hover:scale-105 transition-transform" alt={service.title} />
+                          <h4 className="font-bold text-lg text-white">{service.title}</h4>
+                          
+                          {service.description && (
+                              <p className="text-sm text-stone-300 mt-2 line-clamp-2">
+                                  {service.description}
+                              </p>
+                          )}
+                          
+                          <div className="flex justify-between mt-4 text-sm">
+                              <span className="text-white font-semibold">${service.price}</span>
+                              <span className="flex items-center gap-1 text-orange-400">
+                                  <Star size={12} className="fill-current" /> {service.rating}
+                              </span>
+                          </div>
+                        </div>
                     ))}
                 </div>
             </div>
@@ -466,18 +596,18 @@ const MusicShowcase = ({ services }: { services: any[] }) => {
 
 export const Home = () => {
   const [activeCategory, setActiveCategory] = useState('all');
-  const [filteredServices, setFilteredServices] = useState(SERVICES);
+  // const [filteredServices, setFilteredServices] = useState(SERVICES);
   
-  useEffect(() => {
-    if (activeCategory === 'all') {
-      setFilteredServices(SERVICES);
-    } else {
-      setFilteredServices(SERVICES.filter(s => s.category === activeCategory));
-    }
-  }, [activeCategory]);
+  // useEffect(() => {
+  //   if (activeCategory === 'all') {
+  //     setFilteredServices(SERVICES);
+  //   } else {
+  //     setFilteredServices(SERVICES.filter(s => s.category === activeCategory));
+  //   }
+  // }, [activeCategory]);
 
   return (
-    <div className="min-h-screen bg-stone-50 selection:bg-orange-200 pb-20">
+    <div className="min-h-screen bg-stone-50 selection:bg-orange-200 ">
        {/* Inject Fonts */}
        <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
@@ -487,7 +617,7 @@ export const Home = () => {
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      <Navbar />
+      <Navbar searchValue={''} setSearchValue={ ()=>{}}/>
       
       <main>
         <HeroSection />
@@ -509,11 +639,13 @@ export const Home = () => {
         </div>
 
         <VenueShowcase services={SERVICES.filter(s => s.category === 'venue')} />
-        <PhotographyShowcase services={SERVICES.filter(s => s.category === 'photography')} />
+        <PhotographyShowcase services={SERVICES.filter(s => s.category === 'photoAndVideo')} />
+        <CreativeShowcase services={SERVICES.filter(s => s.category === 'photoAndVideo')} />
+          
         <CateringShowcase /*services={SERVICES.filter(s => s.category === 'catering')}*/ />
         <MusicShowcase services={SERVICES.filter(s => s.category === 'music' || s.category === 'dj')} />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-8">
+        {/* <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <motion.div 
             layout
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
@@ -531,7 +663,7 @@ export const Home = () => {
               <p className="text-xl font-medium">No services found in this category yet.</p>
             </div>
           )}
-        </div>
+        </div> */}
         <Footer/>
       </main>
 

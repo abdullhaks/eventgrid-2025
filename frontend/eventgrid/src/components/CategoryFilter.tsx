@@ -1,19 +1,19 @@
 import { motion } from "framer-motion";
 import { useRef } from "react";
-import { Music, Camera, Utensils, Home as HOMEICON,Sparkles} from 'lucide-react';
+import { Music, Camera, Utensils, Home as HOMEICON,Sparkles, MapPinHouse, Gem, Handshake, Waves, PartyPopper} from 'lucide-react';
 
 
 const CATEGORIES = [
   { id: 'all', label: 'All', icon: Sparkles, color: 'bg-stone-900', text: 'text-white' },
-  { id: 'venue', label: 'Venues', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-  { id: 'wedding_planners', label: 'Wedding Planners', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+  { id: 'venue', label: 'Venues', icon: MapPinHouse , color: 'bg-orange-500', text: 'text-white' },
+  { id: 'wedding_planners', label: 'Wedding Planners', icon: Gem , color: 'bg-orange-500', text: 'text-white' },
   { id: 'destination_wedding', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-  { id: 'corporate_event', label: 'Destination Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
-  { id: 'beach_wedding', label: 'Beach Wedding', icon: HOMEICON, color: 'bg-orange-500', text: 'text-white' },
+  { id: 'corporate_event', label: 'Corporate events', icon: Handshake , color: 'bg-orange-500', text: 'text-white' },
+  { id: 'beach_wedding', label: 'Beach Wedding', icon: Waves , color: 'bg-orange-500', text: 'text-white' },
   { id: 'music_and_entertainment', label: 'Music and Entertainment', icon: Music, color: 'bg-purple-600', text: 'text-white' },
-  { id: 'private_parties', label: 'Private Parties', icon: Music, color: 'bg-purple-600', text: 'text-white' },
+  { id: 'private_parties', label: 'Private Parties', icon: PartyPopper , color: 'bg-purple-600', text: 'text-white' },
   { id: 'catering', label: 'Catering Service', icon: Utensils, color: 'bg-emerald-600', text: 'text-white' },
-  { id: 'photography&videography', label: 'Photography & Videography', icon: Camera, color: 'bg-blue-600', text: 'text-white' },
+  { id: 'photoAndVideo', label: 'Photography & Videography', icon: Camera, color: 'bg-blue-600', text: 'text-white' },
 ];
 
 

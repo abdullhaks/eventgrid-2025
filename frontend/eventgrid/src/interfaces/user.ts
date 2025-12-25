@@ -1,7 +1,4 @@
-export interface IPreference{
-  _id:string;
-  name:string;
-}
+
 
 export interface IUser {
   _id: string;
@@ -13,3 +10,11 @@ export interface IUser {
 };
 
 
+export interface iSearchPrams {
+    search?: string;
+    category?: string;
+    location?: string;
+    sort?: string;
+    page?: number;
+    limit?: number;
+  }

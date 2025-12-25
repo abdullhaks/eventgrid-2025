@@ -13,8 +13,8 @@ import AuthController from "../controllers/implementations/user/authController";
 import IAuthController from "../controllers/interfaces/user/IAuthController";
 import ProfileController from "../controllers/implementations/user/profileController";
 import IProfileController from "../controllers/interfaces/user/IProfileController";
-
-
+import ISearchController from "../controllers/interfaces/user/ISearchController";
+import SearchController from "../controllers/implementations/user/searchController";
 
 
 
@@ -35,6 +35,8 @@ import AuthService from "../services/implementations/user/authService";
 import IAuthService from "../services/interfaces/user/IAuthService";
 import ProfileService from "../services/implementations/user/profileService";
 import IProfileService from "../services/interfaces/user/IProfileService";  
+import SearchService from "../services/implementations/user/searchService";
+import ISearchService from "../services/interfaces/user/ISearchService";
 
 
 
@@ -95,6 +97,8 @@ container.bind<IOtpRepository>('IOtpRepository').to(OtpRepository);
 
 container.bind<IAuthService>("IAuthService").to(AuthService);
 container.bind<IProfileService>("IProfileService").to(ProfileService);
+container.bind<ISearchService>("ISearchService").to(SearchService);
+
 
 container.bind<IAdminAuthService>("IAdminAuthService").to(AdminAuthService);
 container.bind<IAdminPhotoAndvideoService>("IAdminPhotoAndvideoService").to(AdminPhotoAndvideoService);
@@ -108,6 +112,8 @@ container.bind<IAdminVenueService>('IAdminVenueService').to(AdminVenueService);
 //controller binding
 container.bind<IAuthController>("IAuthController").to(AuthController);
 container.bind<IProfileController>("IProfileController").to(ProfileController);
+container.bind<ISearchController>("ISearchController").to(SearchController);
+
 
 container.bind<IAdminAuthController>("IAdminAuthController").to(AdminAuthController)
 container.bind<IAdminPhotoAndvideoController>("IAdminPhotoAndvideoController").to(AdminPhotoAndVideoController);
