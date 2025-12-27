@@ -1,17 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Search,
-  MapPin,
-  Star,
-  Music,
-  Camera,
-  Utensils,
-  Home as HOMEICON,
-  User,
-  Sparkles,
-  ArrowRight,
-  SlidersHorizontal,
+import { Search, MapPin,/* Star,*/ Music,Camera, Utensils, Home as HOMEICON, User,Sparkles,ArrowRight,
+   SlidersHorizontal,
   //   Filter,Heart, Calendar, LogOut, Play, Instagram, ChevronRight, X, Zap, Check,
 } from "lucide-react";
 import { Navbar } from "../../components/Navbar";
@@ -29,6 +19,8 @@ const CATEGORY_MAPPING: Record<string, string> = {
   destination_wedding: "destination_wedding",
   music_and_entertainment: "music_entertainment",
   catering: "catering",
+  beach_wedding: "beach_wedding",
+  corporate_event: "corporate_event",
   photoAndVideo: "photoAndVideo", // or "photo_video" – adjust according to your DB
 };
 
@@ -115,10 +107,10 @@ export const ServiceCard = ({
           alt={service.title}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm text-stone-900">
+        {/* <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-md px-2 py-1 rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm text-stone-900">
           <Star size={12} className="text-orange-500 fill-orange-500" />
           {service.rating} ({service.reviews})
-        </div>
+        </div> */}
       </div>
 
       {/* Content Section */}
@@ -172,7 +164,7 @@ export const ServiceCard = ({
         <div className="pt-4 border-t border-stone-100 flex items-center justify-between mt-4">
           <div>
             <span className="font-bold text-lg text-stone-900">
-              ${service.price.toLocaleString()}
+              ₹{service.price.toLocaleString()}
             </span>
             {service.unit && (
               <span className="text-xs text-stone-500">/{service.unit}</span>
@@ -248,8 +240,8 @@ export function SearchConsole() {
     () =>
       debouncedSearch.trim() !== "" ||
       locationValue.trim() !== "" ||
-      activeCategory !== "all" ||
-      sortOption !== "recommended",
+      activeCategory !== "" ||
+      sortOption !== "",
     [debouncedSearch, locationValue, activeCategory, sortOption]
   );
 
@@ -334,8 +326,8 @@ export function SearchConsole() {
     price: s.price,
     unit: undefined, // add if you have it
     description: s.description,
-    rating: 4.8, // ← placeholder! you should add real rating later
-    reviews: 124, // ← placeholder
+    rating: 0, // ← placeholder! you should add real rating later
+    reviews: 0, // ← placeholder
     tags: [], // ← add if you want
     color: getCategoryColor(s.serviceType), // helper function below
   }));
@@ -365,7 +357,7 @@ export function SearchConsole() {
 
       <main>
         {/* Hero only in pure browsing mode */}
-        {!isFiltering && <HeroSection />}
+        {activeCategory === "all" && <HeroSection />}
 
         {/* Sticky Filter Bar */}
         <div
@@ -396,11 +388,12 @@ export function SearchConsole() {
                     onChange={(e) => setSortOption(e.target.value)}
                     className="appearance-none pl-4 pr-10 py-2 rounded-full border border-stone-200 bg-white text-sm font-medium focus:outline-none cursor-pointer hover:border-orange-500 transition-colors"
                   >
-                    <option value="recommended">Recommended</option>
+                    {/* <option value="recommended">Recommended</option> */}
+                    <option value="recommended">Filter</option>
                     <option value="price_asc">Price: Low to High</option>
                     <option value="price_desc">Price: High to Low</option>
-                    <option value="rating">Top Rated</option>
-                    <option value="reviews">Most Reviewed</option>
+                    {/* <option value="rating">Top Rated</option>
+                    <option value="reviews">Most Reviewed</option> */}
                   </select>
                   <SlidersHorizontal className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-500 w-4 h-4 pointer-events-none" />
                 </div>

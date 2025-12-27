@@ -37,6 +37,9 @@ export default class ServicesService implements IServicesService {
 
     const total = await this._servicesRepository.countDocuments(filters);
 
+    console.log("found services: ", services);
+    console.log("total services: ", total);
+    
     return { services, total };
   };
 
